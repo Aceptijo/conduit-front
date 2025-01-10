@@ -1,7 +1,7 @@
 {
   "name": "leetcode",
   "private": true,
-  "homepage": "https://aceptijo.github.io/conduit-front",
+  "homepage": "https://aceptijo.github.io/conduit-front/",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
