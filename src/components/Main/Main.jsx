@@ -1,9 +1,9 @@
-import Home from "../../pages/Home.jsx";
+import HomePage from "../../pages/HomePage.jsx";
 
 const Main = () => {
    return (
       <main>
-         <Home/>
+         <HomePage/>
       </main>
    );
 };

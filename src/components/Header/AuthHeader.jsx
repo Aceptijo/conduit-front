@@ -1,6 +1,9 @@
 import {Link} from "react-router-dom";
+import useAuthStore from "../../store/authStore.js";
 
 const AuthHeader = () => {
+   const {user} = useAuthStore();
+
    return (
       <header>
          <nav className="navbar navbar-light">
@@ -12,15 +15,19 @@ const AuthHeader = () => {
                      <a className="nav-link active" href="/">Home</a>
                   </li>
                   <li className="nav-item">
-                     <Link className="nav-link" to="/editor"> <i className="ion-compose"></i>&nbsp;New Article </Link>
+                     <Link className="nav-link" to="/editor">
+                        <i className="ion-compose"></i>&nbsp;New Article
+                     </Link>
                   </li>
                   <li className="nav-item">
-                     <Link className="nav-link" to="/settings"> <i className="ion-gear-a"></i>&nbsp;Settings </Link>
+                     <Link className="nav-link" to="/settings">
+                        <i className="ion-gear-a"></i>&nbsp;Settings
+                     </Link>
                   </li>
                   <li className="nav-item">
                      <a className="nav-link" href="/profile/eric-simons">
                         <img src="" className="user-pic"/>
-                        Eric Simons
+                        {user.username}
                      </a>
                   </li>
                </ul>

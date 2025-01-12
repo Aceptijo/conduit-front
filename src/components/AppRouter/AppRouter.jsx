@@ -1,16 +1,38 @@
 import {Navigate, Route, Routes} from "react-router-dom";
-import Login from "../../Authentication/Login.jsx";
-import Register from "../../Authentication/Register.jsx";
+import LoginPage from "../../pages/LoginPage.jsx";
+import RegisterPage from "../../pages/RegisterPage.jsx";
 import Main from "../Main/Main.jsx";
 import Settings from "../Settings/Settings.jsx";
+import ProtectedRoute from "../../pages/ProtectedRoute.jsx";
+import useAuthStore from "../../store/authStore.js";
 
 const AppRouter = () => {
+   const {user} = useAuthStore();
+
    return (
       <Routes>
-         <Route path="/login" element={<Login/>}/>
-         <Route path="/register" element={<Register/>}/>
-         <Route path="/settings" element={<Settings/>}/>
+         <Route
+            path="/login"
+            element={
+               user ? <Navigate to='/'/> : <LoginPage/>
+            }
+         />
+         <Route
+            path="/register"
+            element={
+               user ? <Navigate to='/'/> : <RegisterPage/>
+            }
+         />
          <Route path="/" element={<Main/>}/>
+
+
+         <Route path="/settings" element={
+            <ProtectedRoute>
+               <Settings/>
+            </ProtectedRoute>}
+         />
+
+
          <Route path="*" element={<Navigate to="/"/>}/>
       </Routes>
    );

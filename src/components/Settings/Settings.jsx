@@ -2,11 +2,11 @@ import useAuthStore from "../../store/authStore.js";
 import {useNavigate} from "react-router-dom";
 
 const Settings = () => {
-   const navigate = useNavigate()
-   const logout = useAuthStore(state => state.logout)
+   const clearUser = useAuthStore(state => state.clearUser);
+   const navigate = useNavigate();
 
-   const userLogOut = () => {
-      logout();
+   const handleLogout = () => {
+      clearUser();
       navigate('/')
    }
 
@@ -50,7 +50,7 @@ const Settings = () => {
                      </fieldset>
                   </form>
                   <hr/>
-                  <button onClick={userLogOut} className="btn btn-outline-danger">Or click here to logout.</button>
+                  <button onClick={handleLogout} className="btn btn-outline-danger">Or click here to logout.</button>
                </div>
             </div>
          </div>
