@@ -1,4 +1,4 @@
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useState} from "react";
 import useAuthStore from "../store/authStore.js";
 import LoginForm from "../components/LoginForm/LoginForm.jsx";
@@ -9,6 +9,7 @@ const LoginPage = () => {
    const [password, setPassword] = useState('');
    const [error, setError] = useState(null);
    const [loading, setLoading] = useState(false);
+   const navigate = useNavigate();
 
    const setUser = useAuthStore(state => state.setUser);
 
@@ -20,7 +21,7 @@ const LoginPage = () => {
       try {
          const data = await loginUser(email, password);
          setUser(data.user, data.user.token);
-         window.location.href = '/';
+         navigate('/');
 
       } catch (error) {
          setError(error.errors);
@@ -42,7 +43,7 @@ const LoginPage = () => {
                      <Link to="/register">Need an account?</Link>
                   </p>
                   {error && <ul className="error-messages">
-                     <li>Error</li>
+                     <li>Login or password</li>
                   </ul>}
 
 

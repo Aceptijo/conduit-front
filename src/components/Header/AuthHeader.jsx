@@ -8,11 +8,11 @@ const AuthHeader = () => {
       <header>
          <nav className="navbar navbar-light">
             <div className="container">
-               <a className="navbar-brand" href="/">conduit</a>
+               <Link className="navbar-brand" to="/">conduit</Link>
                <ul className="nav navbar-nav pull-xs-right">
                   <li className="nav-item">
                      {/*Add "active" class when you're on that page"*/}
-                     <a className="nav-link active" href="/">Home</a>
+                     <Link className="nav-link active" to="/">Home</Link>
                   </li>
                   <li className="nav-item">
                      <Link className="nav-link" to="/editor">
@@ -25,10 +25,10 @@ const AuthHeader = () => {
                      </Link>
                   </li>
                   <li className="nav-item">
-                     <a className="nav-link" href="/profile/eric-simons">
+                     <Link className="nav-link" to={`/profile/${user.username}`}>
                         <img src="" className="user-pic"/>
                         {user.username}
-                     </a>
+                     </Link>
                   </li>
                </ul>
             </div>

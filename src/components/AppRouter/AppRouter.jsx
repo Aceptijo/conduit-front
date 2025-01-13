@@ -5,6 +5,7 @@ import Main from "../Main/Main.jsx";
 import Settings from "../Settings/Settings.jsx";
 import ProtectedRoute from "../../pages/ProtectedRoute.jsx";
 import useAuthStore from "../../store/authStore.js";
+import Profile from "../../pages/Profile/Profile.jsx";
 
 const AppRouter = () => {
    const {user} = useAuthStore();
@@ -24,6 +25,7 @@ const AppRouter = () => {
             }
          />
          <Route path="/" element={<Main/>}/>
+         <Route path="/profile/:username" element={<Profile/>}/>
 
 
          <Route path="/settings" element={
