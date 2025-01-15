@@ -1,62 +1,22 @@
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {followUser, getUserProfile, unfollowUser} from "../../api/user.js";
-import {getUserArticles} from "../../api/articles.js";
+import useProfileStore from "../../store/profileStore.js";
 
 const Profile = () => {
    const {username} = useParams();
-   const [profile, setProfile] = useState(null);
-   const [articles, setArticles] = useState([]);
    const [activeTab, setActiveTab] = useState("author");
-   const [loadingProfile, setLoadingProfile] = useState(true);
-   const [loadingArticles, setLoadingArticles] = useState(true);
-   const [error, setError] = useState(null);
+   const {profile, articles, isLoading, fetchProfile, fetchArticles, followUser, unfollowUser} = useProfileStore();
 
    useEffect(() => {
-      const fetchProfile = async () => {
-         try {
-            const userProfile = await getUserProfile(username);
-            setProfile(userProfile)
+      fetchProfile(username);
+      fetchArticles(username, activeTab);
+   }, [username, activeTab, fetchProfile, fetchArticles]);
 
-         } catch (err) {
-            setError('Не удалось загрузить профиль')
-         } finally {
-            setLoadingProfile(false);
-         }
-      }
-      fetchProfile()
-   }, [username]);
-
-   useEffect(() => {
-      const fetchArticles = async () => {
-         try {
-            setLoadingArticles(true)
-            const userArticles = await getUserArticles(username, activeTab);
-            setArticles(userArticles);
-
-         } catch (err) {
-            setError('Статей нет')
-         } finally {
-            setLoadingArticles(false);
-         }
-      }
-      fetchArticles()
-   }, [username, activeTab]);
 
    const handleFollow = async () => {
-      try {
-         const updateProfile = profile.following
-            ? await unfollowUser(username)
-            : await followUser(username)
-         setProfile(updateProfile)
-      } catch (err) {
-         setError('Не получилось изменить статус подписки')
-      }
+      profile.following ? unfollowUser(username) : followUser(username);
    }
 
-
-   if (loadingProfile) return <div>Загрузка...</div>
-   if (error) return <div>{error}</div>
 
    return (
       <div className="profile-page">
@@ -64,18 +24,18 @@ const Profile = () => {
             <div className="container">
                <div className="row">
                   <div className="col-xs-12 col-md-10 offset-md-1">
-                     <img src={profile.image || "https://avatar.iran.liara.run/public/48"}
+                     <img src={profile?.image || "https://avatar.iran.liara.run/public/48"}
                           className="user-img"/>
-                     <h4>{profile.username}</h4>
-                     <p>{profile.bio || "Описание отсутствует"}</p>
+                     <h4>{profile?.username}</h4>
+                     <p>{profile?.bio || "Описание отсутствует"}</p>
                      <button
                         className="btn btn-sm btn-outline-secondary action-btn"
                         onClick={handleFollow}
                      >
                         <i className="ion-plus-round"></i>
-                        {profile.following
-                           ? `Unfollow ${profile.username}`
-                           : `Follow ${profile.username}`}
+                        {profile?.following
+                           ? `Unfollow ${profile?.username}`
+                           : `Follow ${profile?.username}`}
                      </button>
                      {/*<button className="btn btn-sm btn-outline-secondary action-btn">*/}
                      {/*   <i className="ion-gear-a"></i>*/}
@@ -110,7 +70,7 @@ const Profile = () => {
                      </ul>
                   </div>
 
-                  {loadingArticles ? (
+                  {isLoading ? (
                      <div>Загрузка статей...</div>
                   ) : (
                      articles.map(article => (
@@ -137,6 +97,15 @@ const Profile = () => {
                         </div>
                      ))
                   )}
+
+                  {/*<ul className="pagination">*/}
+                  {/*   <li className="page-item active">*/}
+                  {/*      <a className="page-link" href="">1</a>*/}
+                  {/*   </li>*/}
+                  {/*   <li className="page-item">*/}
+                  {/*      <a className="page-link" href="">2</a>*/}
+                  {/*   </li>*/}
+                  {/*</ul>*/}
                </div>
             </div>
          </div>
