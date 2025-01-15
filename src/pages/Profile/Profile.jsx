@@ -1,8 +1,7 @@
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {getUserProfile} from "../../api/user.js";
+import {followUser, getUserProfile, unfollowUser} from "../../api/user.js";
 import {getUserArticles} from "../../api/articles.js";
-import image from '/src/Is this all it takes - Imgur.jpg';
 
 const Profile = () => {
    const {username} = useParams();
@@ -25,7 +24,6 @@ const Profile = () => {
             setLoadingProfile(false);
          }
       }
-
       fetchProfile()
    }, [username]);
 
@@ -42,9 +40,20 @@ const Profile = () => {
             setLoadingArticles(false);
          }
       }
-
       fetchArticles()
    }, [username, activeTab]);
+
+   const handleFollow = async () => {
+      try {
+         const updateProfile = profile.following
+            ? await unfollowUser(username)
+            : await followUser(username)
+         setProfile(updateProfile)
+      } catch (err) {
+         setError('Не получилось изменить статус подписки')
+      }
+   }
+
 
    if (loadingProfile) return <div>Загрузка...</div>
    if (error) return <div>{error}</div>
@@ -55,17 +64,23 @@ const Profile = () => {
             <div className="container">
                <div className="row">
                   <div className="col-xs-12 col-md-10 offset-md-1">
-                     <img src={profile.image || `${image}`} className="user-img"/>
+                     <img src={profile.image || "https://avatar.iran.liara.run/public/48"}
+                          className="user-img"/>
                      <h4>{profile.username}</h4>
                      <p>{profile.bio || "Описание отсутствует"}</p>
-                     <button className="btn btn-sm btn-outline-secondary action-btn">
+                     <button
+                        className="btn btn-sm btn-outline-secondary action-btn"
+                        onClick={handleFollow}
+                     >
                         <i className="ion-plus-round"></i>
-                        &nbsp; Follow {profile.username}
+                        {profile.following
+                           ? `Unfollow ${profile.username}`
+                           : `Follow ${profile.username}`}
                      </button>
-                     <button className="btn btn-sm btn-outline-secondary action-btn">
-                        <i className="ion-gear-a"></i>
-                        &nbsp; Edit Profile Settings
-                     </button>
+                     {/*<button className="btn btn-sm btn-outline-secondary action-btn">*/}
+                     {/*   <i className="ion-gear-a"></i>*/}
+                     {/*   &nbsp; Edit Profile Settings*/}
+                     {/*</button>*/}
                   </div>
                </div>
             </div>
