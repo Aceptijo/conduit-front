@@ -1,8 +1,8 @@
-import useArticleStore from "../../store/articleStore.js";
+import useArticleStore from "../store/articleStore.js";
 import {useState} from "react";
-import axiosInstance from "../../utils/axiosInstance.js";
+import axiosInstance from "../utils/axiosInstance.js";
 
-const AddArticle = () => {
+const AddArticlePage = () => {
   const {
     title,
     description,
@@ -51,7 +51,7 @@ const AddArticle = () => {
                 <fieldset className="form-group">
                   <input type="text"
                          className="form-control form-control-lg"
-                         placeholder="Article Title"
+                         placeholder="ArticlePage Title"
                          value={title}
                          onChange={event => setTitle(event.target.value)}
                   />
@@ -97,7 +97,7 @@ const AddArticle = () => {
                   </div>
                 </fieldset>
                 <button className="btn btn-lg pull-xs-right btn-primary" type="submit">
-                  Publish Article
+                  Publish ArticlePage
                 </button>
               </fieldset>
             </form>
@@ -108,4 +108,4 @@ const AddArticle = () => {
   );
 };
 
-export default AddArticle;
+export default AddArticlePage;

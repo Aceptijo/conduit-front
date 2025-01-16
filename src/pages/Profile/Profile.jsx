@@ -1,4 +1,4 @@
-import {useParams} from "react-router-dom";
+import {NavLink, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import useProfileStore from "../../store/profileStore.js";
 
@@ -20,11 +20,9 @@ const Profile = () => {
     fetchArticles(username, activeTab);
   }, [username, activeTab, fetchProfile, fetchArticles]);
 
-
   const handleFollow = async () => {
     profile.following ? unfollowUser(username) : followUser(username);
   }
-
 
   return (
     <div className="profile-page">
@@ -98,11 +96,11 @@ const Profile = () => {
                       <i className="ion-heart"></i> {article.favoritesCount}
                     </button>
                   </div>
-                  <a href={`/article/${article.slug}`} className="preview-link">
+                  <NavLink to={`/article/${article.slug}`} className="preview-link">
                     <h1>{article.title}</h1>
                     <p>{article.description}</p>
                     <span>Read more...</span>
-                  </a>
+                  </NavLink>
                 </div>
               ))
             )}
