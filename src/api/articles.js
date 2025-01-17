@@ -25,3 +25,19 @@ export const deleteArticle = async (slug) => {
   const response = await axiosInstance.delete(`/articles/${slug}`);
   return response.data;
 }
+
+export const getComments = async (slug) => {
+  const response = await axiosInstance.get(`/articles/${slug}/comments`);
+  return response.data.comments;
+}
+
+export const deleteComment = async (slug, commentId) => {
+  await axiosInstance.delete(`/articles/${slug}/comments/${commentId}`);
+}
+
+export const addComment = async (slug, body) => {
+  const response = await axiosInstance.post(`/articles/${slug}/comments`, {
+    comment: {body},
+  });
+  return response.data.comment;
+}
