@@ -28,7 +28,7 @@ const AppRouter = () => {
       />
       <Route path="/" element={<Main/>}/>
       <Route path="/profile/:username" element={<Profile/>}/>
-      <Route path="/editor" element={<AddArticlePage/>}/>
+      <Route path="/editor/:slug?" element={<AddArticlePage/>}/>
       <Route path="/article/:slug" element={<ArticlePage/>}/>
 
 

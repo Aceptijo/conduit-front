@@ -1,6 +1,8 @@
 import useArticleStore from "../store/articleStore.js";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import axiosInstance from "../utils/axiosInstance.js";
+import {useNavigate, useParams} from "react-router-dom";
+import {getArticle} from "../api/articles.js";
 
 const AddArticlePage = () => {
   const {
@@ -16,17 +18,42 @@ const AddArticlePage = () => {
     resetForm
   } = useArticleStore();
 
+  const {slug} = useParams();
+  const navigate = useNavigate();
   const [tagInput, setTagInput] = useState('');
   const [error, setError] = useState(null);
 
+  useEffect(() => {
+    const fetchArticle = async () => {
+      if (slug) {
+        try {
+          const response = await getArticle(slug);
+          setTitle(response.title);
+          setDescription(response.description);
+          setBody(response.body);
+        } catch (err) {
+          console.error('Не удалось загрузить статью: ', err);
+        }
+      }
+    }
+    fetchArticle();
+  }, [slug, setTitle, setDescription, setBody]);
+
   const handlePublish = async () => {
     try {
-      const response = await axiosInstance.post('/articles', {
-        article: {title, description, body, tagList: tags}
-      })
-      console.log('Published: ', response.data.article)
-      resetForm();
+      if (slug) {
+        await axiosInstance.put(`/articles/${slug}`, {
+          article: {title, description, body, tagList: tags}
+        })
+        navigate(`/article/${slug}`);
+      } else {
+        await axiosInstance.post('/articles', {
+          article: {title, description, body, tagList: tags}
+        })
+        resetForm();
+      }
     } catch (err) {
+      console.error('Ошибка при сохранении стьатьи: ', err)
       setError('Не получилось добавить статью')
     }
   }
@@ -97,7 +124,7 @@ const AddArticlePage = () => {
                   </div>
                 </fieldset>
                 <button className="btn btn-lg pull-xs-right btn-primary" type="submit">
-                  Publish ArticlePage
+                  {slug ? 'Update Article' : 'Publish Article'}
                 </button>
               </fieldset>
             </form>

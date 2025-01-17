@@ -1,7 +1,7 @@
 import {create} from 'zustand';
 
 const useArticleStore = create((set) => ({
-  title: "",
+  title: '',
   description: '',
   body: '',
   tags: [],
