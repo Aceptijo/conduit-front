@@ -18,7 +18,6 @@ const ArticlePage = () => {
 
   const isAuthor = user && user.username === article?.author?.username;
 
-
   useEffect(() => {
     const fetchArticle = async () => {
       try {
@@ -41,11 +40,11 @@ const ArticlePage = () => {
       if (isFavorited) {
         const updatedArticle = await removeFromFavorites(slug);
         setArticle(updatedArticle);
-        setIsFavorited(false);
+        setIsFavorited(true);
       } else {
         const updatedArticle = await addToFavorites(slug);
         setArticle(updatedArticle);
-        setIsFavorited(true);
+        setIsFavorited(false);
       }
     } catch (err) {
       console.error('Не удалось обновить избранное: ', err)

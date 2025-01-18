@@ -1,6 +1,42 @@
 import {Link} from "react-router-dom";
+import {useEffect, useState} from "react";
+import axiosInstance from "../utils/axiosInstance.js";
 
 const HomePage = () => {
+  const [activeTab, setActiveTab] = useState("global");
+  const [articles, setArticles] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [articlePerPage] = useState(4);
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      setIsLoading(true);
+      try {
+        const offset = (currentPage - 1) * articlePerPage;
+        const endpoint = activeTab === "global" ? "/articles" : "/articles/feed";
+        const response = await axiosInstance.get(endpoint, {
+          params: {
+            limit: articlePerPage,
+            offset,
+          }
+        });
+        setArticles(response.data.articles);
+        setTotalPages(Math.ceil(response.data.articlesCount / articlePerPage) - 317);
+      } catch (err) {
+        console.error("Не удалось загрузить статьи: ", err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchArticles();
+  }, [activeTab, currentPage, articlePerPage]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  }
+
   return (
     <div className="home-page">
       <div className="banner">
@@ -16,65 +52,77 @@ const HomePage = () => {
             <div className="feed-toggle">
               <ul className="nav nav-pills outline-active">
                 <li className="nav-item">
-                  <a className="nav-link" href="">Your Feed</a>
+                  <a
+                    className={`nav-link ${activeTab === 'global' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('global')}
+                  >
+                    Global Feed
+                  </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link active" href="">Global Feed</a>
+                  <a
+                    className={`nav-link ${activeTab === 'feed' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('feed')}
+                  >
+                    Your Feed
+                  </a>
                 </li>
               </ul>
             </div>
 
-            <div className="article-preview">
-              <div className="article-meta">
-                <a href="/profile/eric-simons"><img src="http://i.imgur.com/Qr71crq.jpg"/></a>
-                <div className="info">
-                  <a href="/profile/eric-simons" className="author">Eric Simons</a>
-                  <span className="date">January 20th</span>
+            {isLoading ? (
+              <div>Загрузка статей...</div>
+            ) : (
+              articles.map(article => (
+                <div className="article-preview" key={article.slug}>
+                  <div className="article-meta">
+                    <Link to={`/profile/${article.author.username}`}>
+                      <img
+                        src={article.author.image || "https://avatar.iran.liara.run/public/12"}
+                        alt={article.author.username}/>
+                    </Link>
+                    <div className="info">
+                      <Link to={`/profile/${article.author.username}`} className="author">
+                        {article.author.username}
+                      </Link>
+                      <span
+                        className="date">{new Date(article.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    <button className="btn btn-outline-primary btn-sm pull-xs-right">
+                      <i className="ion-heart"></i>
+                      {article.favoritesCount}
+                    </button>
+                  </div>
+                  <Link to={`/article/${article.slug}`} className="preview-link">
+                    <h1>{article.title}</h1>
+                    <p>{article.description}</p>
+                    <span>Read more...</span>
+                    <ul className="tag-list">
+                      {article.tagList.map((tag, index) => (
+                        <li className="tag-default tag-pill tag-outline" key={index}>
+                          {tag}
+                        </li>
+                      ))}
+                    </ul>
+                  </Link>
                 </div>
-                <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                  <i className="ion-heart"></i> 29
-                </button>
-              </div>
-              <Link to="/article/how-to-build-webapps-that-scale" className="preview-link">
-                <h1>How to build webapps that scale</h1>
-                <p>This is the description for the post.</p>
-                <span>Read more...</span>
-                <ul className="tag-list">
-                  <li className="tag-default tag-pill tag-outline">realworld</li>
-                  <li className="tag-default tag-pill tag-outline">implementations</li>
-                </ul>
-              </Link>
-            </div>
+              ))
+            )}
 
-            <div className="article-preview">
-              <div className="article-meta">
-                <a href="/profile/albert-pai"><img src="http://i.imgur.com/N4VcUeJ.jpg"/></a>
-                <div className="info">
-                  <a href="/profile/albert-pai" className="author">Albert Pai</a>
-                  <span className="date">January 20th</span>
-                </div>
-                <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                  <i className="ion-heart"></i> 32
-                </button>
-              </div>
-              <a href="/article/the-song-you" className="preview-link">
-                <h1>The song you won't ever stop singing. No matter how hard you try.</h1>
-                <p>This is the description for the post.</p>
-                <span>Read more...</span>
-                <ul className="tag-list">
-                  <li className="tag-default tag-pill tag-outline">realworld</li>
-                  <li className="tag-default tag-pill tag-outline">implementations</li>
-                </ul>
-              </a>
-            </div>
 
             <ul className="pagination">
-              <li className="page-item active">
-                <a className="page-link" href="">1</a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="">2</a>
-              </li>
+              {Array.from({length: totalPages}).map((_, index) => (
+                <li
+                  className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}
+                  key={index}
+                >
+                  <a className="page-link" href="#" onClick={() => handlePageChange(index + 1)}>
+                    {index + 1}
+                  </a>
+                </li>
+              ))}
+
+
             </ul>
           </div>
 
