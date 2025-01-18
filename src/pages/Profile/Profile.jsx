@@ -1,8 +1,10 @@
-import {NavLink, useParams} from "react-router-dom";
+import {Link, NavLink, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import useProfileStore from "../../store/profileStore.js";
+import useAuthStore from "../../store/authStore.js";
 
 const Profile = () => {
+  const {user} = useAuthStore();
   const {username} = useParams();
   const [activeTab, setActiveTab] = useState("author");
   const {
@@ -34,19 +36,22 @@ const Profile = () => {
                    className="user-img"/>
               <h4>{profile?.username}</h4>
               <p>{profile?.bio || "Описание отсутствует"}</p>
-              <button
-                className="btn btn-sm btn-outline-secondary action-btn"
-                onClick={handleFollow}
-              >
-                <i className="ion-plus-round"></i>
-                {profile?.following
-                  ? `Unfollow ${profile?.username}`
-                  : `Follow ${profile?.username}`}
-              </button>
-              {/*<button className="btn btn-sm btn-outline-secondary action-btn">*/}
-              {/*   <i className="ion-gear-a"></i>*/}
-              {/*   &nbsp; Edit Profile Settings*/}
-              {/*</button>*/}
+              {user && user.username === profile?.username ? (
+                <Link to={'/settings'} className="btn btn-sm btn-outline-secondary action-btn">
+                  <i className="ion-gear-a"></i>
+                  Edit Profile Settings
+                </Link>
+              ) : (
+                <button
+                  className="btn btn-sm btn-outline-secondary action-btn"
+                  onClick={handleFollow}
+                >
+                  <i className="ion-plus-round"></i>
+                  {profile?.following
+                    ? `Unfollow ${profile?.username}`
+                    : `Follow ${profile?.username}`}
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -82,14 +87,14 @@ const Profile = () => {
               articles.map(article => (
                 <div key={article.slug} className="article-preview">
                   <div className="article-meta">
-                    <a href={`/profile/${article.author.username}`}>
+                    <Link to={`/profile/${article.author.username}`}>
                       <img src={article.author.image || "https://avatar.iran.liara.run/public/48"}
                            alt={article.author.username}/>
-                    </a>
+                    </Link>
                     <div className="info">
-                      <a href={`/profile/${article.author.username}`} className="author">
+                      <Link to={`/profile/${article.author.username}`} className="author">
                         {article.author.username}
-                      </a>
+                      </Link>
                       <span className="date">{new Date(article.createdAt).toDateString()}</span>
                     </div>
                     <button className="btn btn-outline-primary btn-sm pull-xs-right">

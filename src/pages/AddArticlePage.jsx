@@ -46,6 +46,7 @@ const AddArticlePage = () => {
           article: {title, description, body, tagList: tags}
         })
         navigate(`/article/${slug}`);
+        resetForm();
       } else {
         await axiosInstance.post('/articles', {
           article: {title, description, body, tagList: tags}
@@ -117,7 +118,7 @@ const AddArticlePage = () => {
                     {tags?.map((tag, index) => (
                       <span key={index} className="tag-default tag-pill">
                         {tag}{' '}
-                        <i className="ion-close-round" onClick={() => removeTag(tag)}></i>
+                        <i className="ion-close-round" onClick={() => removeTag(tag)}>X</i>
                       </span>
                     ))}
 
