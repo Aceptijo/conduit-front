@@ -1,6 +1,7 @@
 import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axiosInstance from "../utils/axiosInstance.js";
+import useTagsStore from "../store/tagsStore.js";
 
 const HomePage = () => {
   const [activeTab, setActiveTab] = useState("global");
@@ -9,6 +10,7 @@ const HomePage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [articlePerPage] = useState(4);
+  const {tags, isLoadingTags, fetchTags} = useTagsStore();
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -23,6 +25,7 @@ const HomePage = () => {
           }
         });
         setArticles(response.data.articles);
+        console.log(response.data)
         setTotalPages(Math.ceil(response.data.articlesCount / articlePerPage) - 317);
       } catch (err) {
         console.error("Не удалось загрузить статьи: ", err);
@@ -32,6 +35,10 @@ const HomePage = () => {
     }
     fetchArticles();
   }, [activeTab, currentPage, articlePerPage]);
+
+  useEffect(() => {
+    fetchTags();
+  }, [fetchTags]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -130,16 +137,21 @@ const HomePage = () => {
             <div className="sidebar">
               <p>Popular Tags</p>
 
-              <div className="tag-list">
-                <a href="" className="tag-pill tag-default">programming</a>
-                <a href="" className="tag-pill tag-default">javascript</a>
-                <a href="" className="tag-pill tag-default">emberjs</a>
-                <a href="" className="tag-pill tag-default">angularjs</a>
-                <a href="" className="tag-pill tag-default">react</a>
-                <a href="" className="tag-pill tag-default">mean</a>
-                <a href="" className="tag-pill tag-default">node</a>
-                <a href="" className="tag-pill tag-default">rails</a>
-              </div>
+              {isLoadingTags ? (
+                <div>Загрузка тэгов...</div>
+              ) : (
+                <div className="tag-list">
+                  {tags?.map(tag => (
+                    <Link
+                      to={`/?tag=${tag}`}
+                      key={tag}
+                      className="tag-pill tag-default"
+                    >
+                      {tag}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
