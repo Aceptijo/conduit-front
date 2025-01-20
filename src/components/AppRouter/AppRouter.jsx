@@ -5,7 +5,7 @@ import Main from "../Main/Main.jsx";
 import Settings from "../Settings/Settings.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
 import useAuthStore from "../../store/authStore.js";
-import Profile from "../../pages/Profile/Profile.jsx";
+import ProfilePage from "../../pages/ProfilePage.jsx";
 import AddArticlePage from "../../pages/AddArticlePage.jsx";
 import ArticlePage from "../../pages/ArticlePage.jsx";
 
@@ -27,7 +27,7 @@ const AppRouter = () => {
         }
       />
       <Route path="/" element={<Main/>}/>
-      <Route path="/profile/:username" element={<Profile/>}/>
+      <Route path="/profile/:username" element={<ProfilePage/>}/>
       <Route path="/editor/:slug?" element={<AddArticlePage/>}/>
       <Route path="/article/:slug" element={<ArticlePage/>}/>
 

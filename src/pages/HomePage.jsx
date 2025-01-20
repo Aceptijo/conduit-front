@@ -2,6 +2,7 @@ import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axiosInstance from "../utils/axiosInstance.js";
 import useTagsStore from "../store/tagsStore.js";
+import ArticlePreview from "../components/Article/ArticlePreview.jsx";
 
 const HomePage = () => {
   const [activeTab, setActiveTab] = useState("global");
@@ -16,7 +17,7 @@ const HomePage = () => {
     const fetchArticles = async () => {
       setIsLoading(true);
       try {
-        const offset = (currentPage - 1) * articlePerPage;
+        const offset = (currentPage - 1);
         const endpoint = activeTab === "global" ? "/articles" : "/articles/feed";
         const response = await axiosInstance.get(endpoint, {
           params: {
@@ -25,8 +26,7 @@ const HomePage = () => {
           }
         });
         setArticles(response.data.articles);
-        console.log(response.data)
-        setTotalPages(Math.ceil(response.data.articlesCount / articlePerPage) - 317);
+        setTotalPages(Math.ceil(response.data.articlesCount / articlePerPage));
       } catch (err) {
         console.error("Не удалось загрузить статьи: ", err);
       } finally {
@@ -81,38 +81,7 @@ const HomePage = () => {
               <div>Загрузка статей...</div>
             ) : (
               articles.map(article => (
-                <div className="article-preview" key={article.slug}>
-                  <div className="article-meta">
-                    <Link to={`/profile/${article.author.username}`}>
-                      <img
-                        src={article.author.image || "https://avatar.iran.liara.run/public/12"}
-                        alt={article.author.username}/>
-                    </Link>
-                    <div className="info">
-                      <Link to={`/profile/${article.author.username}`} className="author">
-                        {article.author.username}
-                      </Link>
-                      <span
-                        className="date">{new Date(article.createdAt).toLocaleDateString()}</span>
-                    </div>
-                    <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                      <i className="ion-heart"></i>
-                      {article.favoritesCount}
-                    </button>
-                  </div>
-                  <Link to={`/article/${article.slug}`} className="preview-link">
-                    <h1>{article.title}</h1>
-                    <p>{article.description}</p>
-                    <span>Read more...</span>
-                    <ul className="tag-list">
-                      {article.tagList.map((tag, index) => (
-                        <li className="tag-default tag-pill tag-outline" key={index}>
-                          {tag}
-                        </li>
-                      ))}
-                    </ul>
-                  </Link>
-                </div>
+                <ArticlePreview article={article} key={article.slug}/>
               ))
             )}
 

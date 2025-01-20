@@ -17,6 +17,9 @@ const useProfileStore = create((set) => ({
       set({isLoading: false})
     }
   },
+  setProfile: (user) => {
+    set({profile: user})
+  },
   fetchArticles: async (username, type) => {
     set({isLoading: true});
     try {

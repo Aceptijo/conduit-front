@@ -1,12 +1,16 @@
-import {Link, NavLink, useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import useProfileStore from "../../store/profileStore.js";
-import useAuthStore from "../../store/authStore.js";
+import useProfileStore from "../store/profileStore.js";
+import useAuthStore from "../store/authStore.js";
+import ArticlePreview from "../components/Article/ArticlePreview.jsx";
 
-const Profile = () => {
+const ProfilePage = () => {
   const {user} = useAuthStore();
   const {username} = useParams();
   const [activeTab, setActiveTab] = useState("author");
+  const [articlesPerPage] = useState(3);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const {
     profile,
     articles,
@@ -14,11 +18,16 @@ const Profile = () => {
     fetchProfile,
     fetchArticles,
     followUser,
-    unfollowUser
+    unfollowUser,
+    setProfile,
   } = useProfileStore();
 
   useEffect(() => {
-    fetchProfile(username);
+    if (user && user.username === username) {
+      setProfile(user);
+    } else {
+      fetchProfile(username);
+    }
     fetchArticles(username, activeTab);
   }, [username, activeTab, fetchProfile, fetchArticles]);
 
@@ -32,7 +41,7 @@ const Profile = () => {
         <div className="container">
           <div className="row">
             <div className="col-xs-12 col-md-10 offset-md-1">
-              <img src={profile?.image || "https://avatar.iran.liara.run/public/48"}
+              <img src={profile?.image || "https://avatar.iran.liara.run/public/12"}
                    className="user-img"/>
               <h4>{profile?.username}</h4>
               <p>{profile?.bio || "Описание отсутствует"}</p>
@@ -85,39 +94,18 @@ const Profile = () => {
               <div>Загрузка статей...</div>
             ) : (
               articles.map(article => (
-                <div key={article.slug} className="article-preview">
-                  <div className="article-meta">
-                    <Link to={`/profile/${article.author.username}`}>
-                      <img src={article.author.image || "https://avatar.iran.liara.run/public/48"}
-                           alt={article.author.username}/>
-                    </Link>
-                    <div className="info">
-                      <Link to={`/profile/${article.author.username}`} className="author">
-                        {article.author.username}
-                      </Link>
-                      <span className="date">{new Date(article.createdAt).toDateString()}</span>
-                    </div>
-                    <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                      <i className="ion-heart"></i> {article.favoritesCount}
-                    </button>
-                  </div>
-                  <NavLink to={`/article/${article.slug}`} className="preview-link">
-                    <h1>{article.title}</h1>
-                    <p>{article.description}</p>
-                    <span>Read more...</span>
-                  </NavLink>
-                </div>
+                <ArticlePreview article={article} key={article.slug}/>
               ))
             )}
 
-            {/*<ul className="pagination">*/}
-            {/*   <li className="page-item active">*/}
-            {/*      <a className="page-link" href="">1</a>*/}
-            {/*   </li>*/}
-            {/*   <li className="page-item">*/}
-            {/*      <a className="page-link" href="">2</a>*/}
-            {/*   </li>*/}
-            {/*</ul>*/}
+            <ul className="pagination">
+              <li className="page-item active">
+                <a className="page-link" href="">1</a>
+              </li>
+              <li className="page-item">
+                <a className="page-link" href="">2</a>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -125,4 +113,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default ProfilePage;

@@ -50,8 +50,9 @@ const Settings = () => {
       const response = await axiosInstance.put('/user', {
         user: updatedData,
       })
-      setUser(response.data.user, token);
-      navigate(`/profile/${user.username}`)
+      const updatedUser = response.data.user;
+      setUser(updatedUser, token);
+      navigate(`/profile/${updatedUser.username}`)
     } catch (err) {
       console.error('Ошибка обновления профиля: ', err);
       setError('Не удалось обновить профиль. Проверьте данные и попробуйте снова.')
@@ -84,6 +85,7 @@ const Settings = () => {
                     className="form-control"
                     type="text"
                     placeholder="URL of profile picture"
+                    name='image'
                     value={formData.image}
                     onChange={handleChange}
                   />
