@@ -21,7 +21,7 @@ const Settings = () => {
         username: user.username || '',
         email: user.email || '',
         bio: user.bio || '',
-        image: user.image || '',
+        image: '',
         password: '',
       })
     }
