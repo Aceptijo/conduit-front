@@ -26,7 +26,9 @@ const ArticleActions = ({
 
         {!isAuthor && (
           <button
-            className={`btn btn-sm btn-outline-secondary`} onClick={onFollow}>
+            className={`btn btn-sm btn-outline-secondary`}
+            onClick={onFollow}
+          >
             <i className="ion-plus-round"></i>
             {isFollowing
               ? `Unfollow ${article?.author?.username}`
@@ -36,7 +38,7 @@ const ArticleActions = ({
         )}
 
         <button
-          className="btn btn-sm btn-outline-primary"
+          className={`btn btn-sm btn-outline-primary ${isFavorited ? 'active' : ''} `}
           onClick={onFavorite}
         >
           <i className="ion-heart"></i>

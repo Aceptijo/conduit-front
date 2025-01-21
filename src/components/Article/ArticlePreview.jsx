@@ -1,6 +1,21 @@
 import {Link} from "react-router-dom";
+import {addToFavorites, removeFromFavorites} from "../../api/articles.js";
 
-const ArticlePreview = ({article}) => {
+const ArticlePreview = ({article, onFavoriteToggle}) => {
+  const handleFavorite = async () => {
+    try {
+      const updatedArticle = article.favorited
+        ? await removeFromFavorites(article.slug)
+        : await addToFavorites(article.slug);
+
+      if (onFavoriteToggle) {
+        onFavoriteToggle(updatedArticle);
+      }
+    } catch (err) {
+      console.error('Не удалось изменить список избранных: ', err)
+    }
+  }
+
   return (
     <div className="article-preview">
       <div className="article-meta">
@@ -16,7 +31,10 @@ const ArticlePreview = ({article}) => {
           <span
             className="date">{new Date(article.createdAt).toLocaleDateString()}</span>
         </div>
-        <button className="btn btn-outline-primary btn-sm pull-xs-right">
+        <button
+          className={`btn btn-sm btn-outline-primary pull-xs-right ${article.favorited ? 'active' : ''}`}
+          onClick={handleFavorite}
+        >
           <i className="ion-heart"></i>
           {article.favoritesCount}
         </button>

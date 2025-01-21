@@ -104,6 +104,7 @@ const ArticlePage = () => {
 
       <div className="container page">
         <ArticleContent article={article}/>
+        <hr/>
         <ArticleActions
           article={article}
           onFavorite={handleFavorite}
@@ -113,7 +114,6 @@ const ArticlePage = () => {
           isFollowing={isFollowing}
           onFollow={handleFollow}
         />
-        <hr/>
         <CommentsSection slug={slug}/>
       </div>
     </div>

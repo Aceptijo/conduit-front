@@ -40,6 +40,13 @@ const HomePage = () => {
     fetchTags();
   }, [fetchTags]);
 
+  const handleFavoriteToggle = (updatedArticle) => {
+    setArticles((prevArticles) =>
+      prevArticles.map((article) =>
+        article.slug === updatedArticle.slug ? updatedArticle : article)
+    )
+  }
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
   }
@@ -81,7 +88,11 @@ const HomePage = () => {
               <div>Загрузка статей...</div>
             ) : (
               articles.map(article => (
-                <ArticlePreview article={article} key={article.slug}/>
+                <ArticlePreview
+                  article={article}
+                  key={article.slug}
+                  onFavoriteToggle={handleFavoriteToggle}
+                />
               ))
             )}
 
