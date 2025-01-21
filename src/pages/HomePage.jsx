@@ -113,7 +113,10 @@ const HomePage = () => {
                 <li className="nav-item">
                   <Link
                     className={`nav-link ${activeTab === 'feed' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('feed')}
+                    onClick={() => {
+                      setActiveTab('feed');
+                      setCurrentPage(1);
+                    }}
                     to='/?feed=your'
                   >
                     Your Feed
@@ -137,10 +140,10 @@ const HomePage = () => {
             {isLoading ? (
               <div>Загрузка статей...</div>
             ) : articles.length > 0 ? (
-              articles.map((article) => (
+              articles.map((article, index) => (
                 <ArticlePreview
                   article={article}
-                  key={article.slug}
+                  key={article.slug + index}
                   onFavoriteToggle={handleFavoriteToggle}
                 />
               ))
@@ -174,7 +177,7 @@ const HomePage = () => {
                 <div>Загрузка тэгов...</div>
               ) : (
                 <div className="tag-list">
-                  {tags?.map(tagItem => (
+                  {tags?.map((tagItem) => (
                     <Link
                       to={`/?tag=${tagItem}`}
                       onClick={() => {
