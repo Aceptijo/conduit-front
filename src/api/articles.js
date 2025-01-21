@@ -1,9 +1,9 @@
 import axiosInstance from "../utils/axiosInstance.js";
 
-export const getUserArticles = async (username, type) => {
-  const endpoint = `/articles?${type}=${username}`;
+export const getUserArticles = async (username, type, offset, limit) => {
+  const endpoint = `/articles?${type}=${username}&offset=${offset}&limit=${limit}`;
   const response = await axiosInstance.get(endpoint);
-  return response.data.articles;
+  return response.data;
 }
 
 export const getArticle = async (slug) => {

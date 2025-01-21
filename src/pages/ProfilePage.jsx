@@ -8,9 +8,8 @@ const ProfilePage = () => {
   const {user} = useAuthStore();
   const {username} = useParams();
   const [activeTab, setActiveTab] = useState("author");
-  const [articlesPerPage] = useState(3);
-  const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const articlesPerPage = 3;
   const {
     profile,
     articles,
@@ -20,7 +19,10 @@ const ProfilePage = () => {
     followUser,
     unfollowUser,
     setProfile,
+    articlesCount,
   } = useProfileStore();
+  const totalPages = Math.ceil(articlesCount / articlesPerPage);
+  const pageNumber = Array.from({length: totalPages}, (_, i) => i + 1);
 
   useEffect(() => {
     if (user && user.username === username) {
@@ -28,12 +30,14 @@ const ProfilePage = () => {
     } else {
       fetchProfile(username);
     }
-    fetchArticles(username, activeTab);
-  }, [username, activeTab, fetchProfile, fetchArticles]);
+    const offset = (currentPage - 1);
+    fetchArticles(username, activeTab, offset, articlesPerPage)
+  }, [username, activeTab, fetchProfile, fetchArticles, currentPage]);
 
   const handleFollow = async () => {
     profile.following ? unfollowUser(username) : followUser(username);
   }
+
 
   return (
     <div className="profile-page">
@@ -99,12 +103,16 @@ const ProfilePage = () => {
             )}
 
             <ul className="pagination">
-              <li className="page-item active">
-                <a className="page-link" href="">1</a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="">2</a>
-              </li>
+              {pageNumber.map(page => (
+                <li
+                  className={`page-item ${currentPage === page ? 'active' : ''}`}
+                  key={page}
+                >
+                  <button className="page-link" onClick={() => setCurrentPage(page)}>
+                    {page}
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
         </div>

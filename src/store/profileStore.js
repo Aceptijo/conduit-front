@@ -5,6 +5,7 @@ import {getUserArticles} from "../api/articles.js";
 const useProfileStore = create((set) => ({
   profile: null,
   articles: [],
+  articlesCount: 0,
   isLoading: false,
   fetchProfile: async (username) => {
     set({isLoading: true});
@@ -20,12 +21,15 @@ const useProfileStore = create((set) => ({
   setProfile: (user) => {
     set({profile: user})
   },
-  fetchArticles: async (username, type) => {
+  fetchArticles: async (username, type, offset, limit) => {
     set({isLoading: true});
     try {
-      const response = await getUserArticles(username, type);
-      console.log('Ответ сервера', response)
-      set({articles: response})
+      const response = await getUserArticles(username, type, offset, limit);
+      set({
+        articles: response.articles,
+        articlesCount: response.articlesCount,
+        isLoading: false,
+      })
     } catch (err) {
       console.error('Не получилось получить данные статей: ', err);
     } finally {
