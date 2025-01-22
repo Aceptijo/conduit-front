@@ -1,7 +1,9 @@
-import {Link} from "react-router-dom";
-import {addToFavorites, removeFromFavorites} from "../../api/articles.js";
+import { Link } from 'react-router-dom';
+import { addToFavorites, removeFromFavorites } from '../../api/articles.js';
+import LikeIcon from '../icons/LikeIcon/LikeIcon.jsx';
+import '/src/styles/global.css';
 
-const ArticlePreview = ({article, onFavoriteToggle}) => {
+const ArticlePreview = ({ article, onFavoriteToggle, handleTagClick }) => {
   const handleFavorite = async () => {
     try {
       const updatedArticle = article.favorited
@@ -12,29 +14,33 @@ const ArticlePreview = ({article, onFavoriteToggle}) => {
         onFavoriteToggle(updatedArticle);
       }
     } catch (err) {
-      console.error('Не удалось изменить список избранных: ', err)
+      console.error('Не удалось изменить список избранных: ', err);
     }
-  }
+  };
 
   return (
     <div className="article-preview">
       <div className="article-meta">
         <Link to={`/profile/${article.author.username}`}>
           <img
-            src={article.author.image || "https://avatar.iran.liara.run/public/12"}
-            alt={article.author.username}/>
+            src={
+              article.author.image ||
+              `https://api.dicebear.com/6.x/micah/svg?seed=${article.author.username}`
+            }
+            alt={article.author.username}
+          />
         </Link>
         <div className="info">
           <Link to={`/profile/${article.author.username}`} className="author">
             {article.author.username}
           </Link>
-          <span
-            className="date">{new Date(article.createdAt).toLocaleDateString()}</span>
+          <span className="date">{new Date(article.createdAt).toLocaleDateString()}</span>
         </div>
         <button
           className={`btn btn-sm btn-outline-primary pull-xs-right ${article.favorited ? 'active' : ''}`}
           onClick={handleFavorite}
         >
+          <LikeIcon />
           <i className="ion-heart"></i>
           {article.favoritesCount}
         </button>
@@ -43,14 +49,19 @@ const ArticlePreview = ({article, onFavoriteToggle}) => {
         <h1>{article.title}</h1>
         <p>{article.description}</p>
         <span>Read more...</span>
-        <ul className="tag-list">
-          {article.tagList.map((tag, index) => (
-            <li className="tag-default tag-pill tag-outline" key={index}>
-              {tag}
-            </li>
-          ))}
-        </ul>
       </Link>
+      <ul className="tag-list" style={{ float: 'right' }}>
+        {article.tagList.map((tag, index) => (
+          <Link
+            className="tag-default tag-pill tag-outline"
+            onClick={() => handleTagClick(tag)}
+            key={index}
+            to={`/?tag=${tag}`}
+          >
+            {tag}
+          </Link>
+        ))}
+      </ul>
     </div>
   );
 };

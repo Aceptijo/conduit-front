@@ -1,11 +1,11 @@
-import HomePage from "../../pages/HomePage.jsx";
+import HomePage from '../../pages/HomePage.jsx';
 
 const Main = () => {
-   return (
-      <main>
-         <HomePage/>
-      </main>
-   );
+  return (
+    <main>
+      <HomePage />
+    </main>
+  );
 };
 
 export default Main;

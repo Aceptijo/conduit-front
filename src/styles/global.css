@@ -1,0 +1,88 @@
+@import './variables.css';
+
+
+.home-page {
+   .banner {
+      background: var(--main-color);
+      color: var(--bg-color);
+
+      p {
+         color: var(--bg-color);
+      }
+   }
+
+   .nav-item {
+      background: var(--sub-bg-color);
+      border-bottom: 1px solid var(--sub-color);
+
+      .nav-link {
+         color: var(--sub-color);
+      }
+
+      .nav-link:hover {
+         color: var(--bg-color);
+         background: var(--text-color);
+      }
+
+      .nav-link.active {
+         color: var(--main-color) !important;
+         background: var(--sub-bg-color) !important;
+         border-bottom: 2px solid var(--main-color) !important;
+         cursor: pointer;
+      }
+   }
+
+
+   .sidebar {
+      background: var(--bg-color);
+   }
+}
+
+.article-preview {
+   background-color: var(--bg-color);
+   color: var(--text-color);
+   border-top: 1px solid var(--sub-color);
+
+
+   a {
+      color: var(--main-color)
+   }
+
+   .btn {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 5px;
+      color: var(--main-color);
+      border-color: var(--main-color);
+   }
+
+   .btn:hover {
+      background: var(--main-color);
+      color: var(--bg-color);
+   }
+
+   .btn:focus {
+      outline: none;
+      border: 1px solid var(--main-color);
+      background: var(--bg-color);
+      color: var(--main-color);
+   }
+
+
+   .btn.active {
+      background: var(--main-color);
+      color: var(--bg-color);
+   }
+
+   .btn.active:hover {
+      border-color: var(--main-color);
+      background: var(--bg-color);
+      color: var(--main-color);
+
+   }
+
+}
+
+
+
