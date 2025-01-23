@@ -35,7 +35,7 @@ const ProfilePage = () => {
   }, [username, activeTab, fetchProfile, fetchArticles, currentPage]);
 
   const handleFollow = async () => {
-    profile.following ? unfollowUser(username) : followUser(username);
+    profile.following ? await unfollowUser(username) : await followUser(username);
   };
 
   return (
@@ -64,7 +64,6 @@ const ProfilePage = () => {
                   className="btn btn-sm btn-outline-secondary action-btn"
                   onClick={handleFollow}
                 >
-                  <i className="ion-plus-round"></i>
                   {profile?.following
                     ? `Unfollow ${profile?.username}`
                     : `Follow ${profile?.username}`}

@@ -4,6 +4,8 @@ import axiosInstance from '../utils/axiosInstance.js';
 import useTagsStore from '../store/tagsStore.js';
 import ArticlePreview from '../components/Article/ArticlePreview.jsx';
 import '/src/styles/global.css';
+import LeftIcon from '../components/icons/LeftIcon/LeftIcon.jsx';
+import RightIcon from '../components/icons/RightIcon/RightIcon.jsx';
 
 const HomePage = () => {
   const [activeTab, setActiveTab] = useState('global');
@@ -154,16 +156,69 @@ const HomePage = () => {
             )}
 
             <ul className="pagination">
-              {Array.from({ length: totalPages }).map((_, index) => (
-                <li
-                  className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}
-                  key={index}
-                >
-                  <a className="page-link" href="#" onClick={() => handlePageChange(index + 1)}>
-                    {index + 1}
+              {currentPage > 1 && (
+                <li className="page-item">
+                  <a
+                    className="page-link arrow"
+                    href="#"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                  >
+                    <LeftIcon />
                   </a>
                 </li>
-              ))}
+              )}
+              {currentPage > 2 && (
+                <li className="page-item">
+                  <a className="page-link" href="#" onClick={() => handlePageChange(1)}>
+                    1
+                  </a>
+                </li>
+              )}
+              {currentPage > 3 && (
+                <li className="page-item disabled">
+                  <span className="page-link">...</span>
+                </li>
+              )}
+
+              {Array.from({ length: 3 }).map((_, index) => {
+                const page = currentPage - 1 + index;
+                if (page > 0 && page <= totalPages) {
+                  return (
+                    <li className={`page-item ${currentPage === page ? 'active' : ''}`} key={page}>
+                      <a className="page-link" href="#" onClick={() => handlePageChange(page)}>
+                        {page}
+                      </a>
+                    </li>
+                  );
+                }
+                return null;
+              })}
+
+              {currentPage < totalPages - 2 && (
+                <li className="page-item disabled">
+                  <span className="page-link">...</span>
+                </li>
+              )}
+
+              {currentPage < totalPages - 1 && (
+                <li className="page-item">
+                  <a href="#" className="page-link" onClick={() => handlePageChange(totalPages)}>
+                    {totalPages}
+                  </a>
+                </li>
+              )}
+
+              {currentPage < totalPages && (
+                <li className="page-item">
+                  <a
+                    href="#"
+                    className="page-link arrow"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                  >
+                    <RightIcon />
+                  </a>
+                </li>
+              )}
             </ul>
           </div>
 
