@@ -2,17 +2,18 @@ import { Link } from 'react-router-dom';
 import { addToFavorites, removeFromFavorites } from '../../api/articles.js';
 import LikeIcon from '../icons/LikeIcon/LikeIcon.jsx';
 import '/src/styles/global.css';
+import useArticlesStore from '../../store/articlesStore.js';
 
-const ArticlePreview = ({ article, onFavoriteToggle, handleTagClick }) => {
+const ArticlePreview = ({ article, handleTagClick }) => {
+  const { favoriteToggle } = useArticlesStore();
+
   const handleFavorite = async () => {
     try {
       const updatedArticle = article.favorited
         ? await removeFromFavorites(article.slug)
         : await addToFavorites(article.slug);
 
-      if (onFavoriteToggle) {
-        onFavoriteToggle(updatedArticle);
-      }
+      favoriteToggle(updatedArticle);
     } catch (err) {
       console.error('Не удалось изменить список избранных: ', err);
     }
@@ -41,7 +42,6 @@ const ArticlePreview = ({ article, onFavoriteToggle, handleTagClick }) => {
           onClick={handleFavorite}
         >
           <LikeIcon />
-          <i className="ion-heart"></i>
           {article.favoritesCount}
         </button>
       </div>

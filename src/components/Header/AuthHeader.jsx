@@ -1,34 +1,38 @@
-import {Link} from "react-router-dom";
-import useAuthStore from "../../store/authStore.js";
+import { NavLink } from 'react-router-dom';
+import useAuthStore from '../../store/authStore.js';
 
 const AuthHeader = () => {
-  const {user} = useAuthStore();
+  const { user } = useAuthStore();
 
   return (
     <header>
       <nav className="navbar navbar-light">
         <div className="container">
-          <a className="navbar-brand" href="/">conduit</a>
+          <a className="navbar-brand" href="/">
+            conduit
+          </a>
           <ul className="nav navbar-nav pull-xs-right">
             <li className="nav-item">
               {/*Add "active" class when you're on that page"*/}
-              <Link className="nav-link active" to="/">Home</Link>
+              <NavLink className="nav-link" to="/">
+                Home
+              </NavLink>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/editor">
+              <NavLink className="nav-link" to="/editor">
                 <i className="ion-compose"></i>&nbsp;New Article
-              </Link>
+              </NavLink>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/settings">
+              <NavLink className="nav-link" to="/settings">
                 <i className="ion-gear-a"></i>&nbsp;Settings
-              </Link>
+              </NavLink>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to={`/profile/${user.username}`}>
-                <img src="" className="user-pic"/>
+              <NavLink className="nav-link" to={`/profile/${user.username}`}>
+                <img src="" className="user-pic" />
                 {user.username}
-              </Link>
+              </NavLink>
             </li>
           </ul>
         </div>

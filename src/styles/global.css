@@ -103,32 +103,68 @@
       justify-content: space-between;
       align-items: center;
       gap: 5px;
-      color: var(--main-color);
-      border-color: var(--main-color);
+      color: var(--text-color);
+      border-color: var(--sub-bg-color);
+      background: var(--sub-bg-color);
    }
 
    .btn:hover {
-      background: var(--main-color);
+      background: var(--text-color);
       color: var(--bg-color);
+   }
+
+   .btn:active {
+      background: var(--sub-color);
+      color: var(--bg-color);
+   }
+
+   .btn:focus:hover {
+      background: var(--text-color);
+      color: var(--bg-color);
+      border-color: var(--text-color);
    }
 
    .btn:focus {
       outline: none;
-      border: 1px solid var(--main-color);
-      background: var(--bg-color);
-      color: var(--main-color);
+      background: var(--sub-bg-color);
+      color: var(--text-color);
+   }
+
+   .btn:active:focus {
+      outline: none;
+      border-color: var(--sub-color);
+      background: var(--sub-color);
+      color: var(--bg-color);
    }
 
    .btn.active {
       background: var(--main-color);
       color: var(--bg-color);
+      border-color: var(--main-color);
    }
 
    .btn.active:hover {
-      border-color: var(--main-color);
-      background: var(--bg-color);
-      color: var(--main-color);
+      border-color: var(--text-color);
+      background: var(--text-color);
+      color: var(--bg-color);
+   }
 
+   .btn.active:active {
+      background: var(--sub-color);
+   }
+
+   .btn.active:focus {
+      outline: none;
+      border-color: var(--main-color);
+   }
+
+   .btn.active:focus:hover {
+      outline: none;
+      border-color: var(--text-color);
+   }
+
+   .btn.active:active:focus {
+      border-color: var(--sub-color);
    }
 
    .tag-default.tag-outline {
@@ -356,11 +392,21 @@
       color: var(--sub-color);
    }
 
+   .nav-link:focus {
+      outline: none;
+      color: var(--main-color);
+   }
+
    .nav-link:hover {
       color: var(--text-color);
    }
 
    .nav-link.active {
+      color: var(--main-color);
+   }
+
+   .nav-link.active:focus {
+      outline: none;
       color: var(--main-color);
    }
 
@@ -391,6 +437,31 @@ footer {
    .user-info {
       background: var(--sub-bg-color);
 
+      .action-btn {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         gap: 5px;
+         opacity: 1;
+         border-color: var(--text-color);
+         color: var(--text-color);
+      }
+
+      .action-btn:hover {
+         background: var(--text-color);
+         color: var(--sub-bg-color);
+      }
+
+      .action-btn:focus {
+         outline: none;
+         color: var(--sub-bg-color);
+      }
+
+      .action-btn:active {
+         outline: none;
+         color: var(--sub-bg-color);
+      }
+
       h4 {
          color: var(--main-color);
       }
@@ -399,6 +470,129 @@ footer {
          color: var(--text-color);
       }
    }
+
+   .nav-item {
+      background: var(--sub-bg-color);
+      border-bottom: 1px solid var(--sub-color);
+      cursor: pointer;
+
+      .nav-link {
+         color: var(--sub-color);
+      }
+
+      .nav-link:hover {
+         color: var(--bg-color);
+         background: var(--text-color);
+      }
+
+      .nav-link.active {
+         color: var(--main-color) !important;
+         background: var(--sub-bg-color) !important;
+         border-bottom: 2px solid var(--main-color) !important;
+         cursor: pointer;
+      }
+   }
+
+   .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .page-link {
+         background: var(--sub-bg-color);
+         border-color: var(--sub-bg-color);
+         color: var(--text-color);
+         text-decoration: none;
+      }
+
+      .page-link:hover {
+         background: var(--text-color);
+         color: var(--bg-color);
+      }
+
+      .page-link.arrow {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         padding: 0.78rem 0.75rem;
+      }
+
+      .page-item.active .page-link {
+         background: var(--main-color);
+         border-color: var(--main-color);
+         color: var(--bg-color);
+         cursor: pointer;
+      }
+
+      .page-link.active {
+         background: var(--main-color);
+         border-color: var(--main-color);
+      }
+   }
+
+
 }
 
 
+.editor-page {
+   .form-control {
+      background: var(--sub-bg-color);
+      border-color: var(--sub-color);
+      color: var(--text-color);
+   }
+
+   .btn-lg {
+      background: var(--main-color);
+      border-color: var(--main-color);
+      color: var(--bg-color);
+   }
+
+   .btn-lg:hover {
+      background: var(--text-color);
+      border-color: var(--text-color);
+   }
+
+   .btn-lg:active {
+      background: var(--sub-color);
+      color: var(--bg-color);
+      border-color: var(--sub-color);
+   }
+
+   .btn-lg:focus {
+      outline: none;
+   }
+}
+
+
+.settings-page {
+   .form-control {
+      background: var(--sub-bg-color);
+      border-color: var(--sub-color);
+      color: var(--text-color);
+   }
+
+   .btn-lg {
+      background: var(--main-color);
+      border-color: var(--main-color);
+      color: var(--bg-color);
+   }
+
+   .btn-lg:hover {
+      background: var(--text-color);
+      border-color: var(--text-color);
+   }
+
+   .btn-lg:active {
+      background: var(--sub-color);
+      color: var(--bg-color);
+      border-color: var(--sub-color);
+   }
+
+   .btn-lg:focus {
+      outline: none;
+   }
+
+   h1 {
+      color: var(--main-color);
+   }
+}

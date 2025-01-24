@@ -3,39 +3,37 @@ import { useEffect, useState } from 'react';
 import useProfileStore from '../store/profileStore.js';
 import useAuthStore from '../store/authStore.js';
 import ArticlePreview from '../components/Article/ArticlePreview.jsx';
+import useArticlesStore from '../store/articlesStore.js';
+import LeftIcon from '../components/icons/LeftIcon/LeftIcon.jsx';
+import RightIcon from '../components/icons/RightIcon/RightIcon.jsx';
 
 const ProfilePage = () => {
   const { user } = useAuthStore();
+  const { profile, isLoading, fetchProfile, followUser, unfollowUser, setProfile } =
+    useProfileStore();
+  const { articles, fetchArticles, articlesCount } = useArticlesStore();
   const { username } = useParams();
   const [activeTab, setActiveTab] = useState('author');
   const [currentPage, setCurrentPage] = useState(1);
   const articlesPerPage = 3;
-  const {
-    profile,
-    articles,
-    isLoading,
-    fetchProfile,
-    fetchArticles,
-    followUser,
-    unfollowUser,
-    setProfile,
-    articlesCount,
-  } = useProfileStore();
   const totalPages = Math.ceil(articlesCount / articlesPerPage);
-  const pageNumber = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   useEffect(() => {
-    if (user && user.username === username) {
+    if (user.username === username) {
       setProfile(user);
     } else {
       fetchProfile(username);
     }
     const offset = currentPage - 1;
     fetchArticles(username, activeTab, offset, articlesPerPage);
-  }, [username, activeTab, fetchProfile, fetchArticles, currentPage]);
+  }, [username, activeTab, fetchProfile, currentPage, setProfile, user]);
 
   const handleFollow = async () => {
-    profile.following ? await unfollowUser(username) : await followUser(username);
+    profile.following ? unfollowUser(username) : followUser(username);
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -56,7 +54,6 @@ const ProfilePage = () => {
               <p>{profile?.bio || 'Описание отсутствует'}</p>
               {user && user.username === profile?.username ? (
                 <Link to={'/settings'} className="btn btn-sm btn-outline-secondary action-btn">
-                  <i className="ion-gear-a"></i>
                   Edit Profile Settings
                 </Link>
               ) : (
@@ -101,17 +98,73 @@ const ProfilePage = () => {
             {isLoading ? (
               <div>Загрузка статей...</div>
             ) : (
-              articles.map((article) => <ArticlePreview article={article} key={article.slug} />)
+              articles?.map((article) => <ArticlePreview article={article} key={article.slug} />)
             )}
 
             <ul className="pagination">
-              {pageNumber.map((page) => (
-                <li className={`page-item ${currentPage === page ? 'active' : ''}`} key={page}>
-                  <button className="page-link" onClick={() => setCurrentPage(page)}>
-                    {page}
-                  </button>
+              {currentPage > 1 && (
+                <li className="page-item">
+                  <a
+                    className="page-link arrow"
+                    href="#"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                  >
+                    <LeftIcon />
+                  </a>
                 </li>
-              ))}
+              )}
+              {currentPage > 2 && (
+                <li className="page-item">
+                  <a className="page-link" href="#" onClick={() => handlePageChange(1)}>
+                    1
+                  </a>
+                </li>
+              )}
+              {currentPage > 3 && (
+                <li className="page-item disabled">
+                  <span className="page-link">...</span>
+                </li>
+              )}
+
+              {Array.from({ length: 3 }).map((_, index) => {
+                const page = currentPage - 1 + index;
+                if (page > 0 && page <= totalPages) {
+                  return (
+                    <li className={`page-item ${currentPage === page ? 'active' : ''}`} key={page}>
+                      <a className="page-link" href="#" onClick={() => handlePageChange(page)}>
+                        {page}
+                      </a>
+                    </li>
+                  );
+                }
+                return null;
+              })}
+
+              {currentPage < totalPages - 2 && (
+                <li className="page-item disabled">
+                  <span className="page-link">...</span>
+                </li>
+              )}
+
+              {currentPage < totalPages - 1 && (
+                <li className="page-item">
+                  <a href="#" className="page-link" onClick={() => handlePageChange(totalPages)}>
+                    {totalPages}
+                  </a>
+                </li>
+              )}
+
+              {currentPage < totalPages && (
+                <li className="page-item">
+                  <a
+                    href="#"
+                    className="page-link arrow"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                  >
+                    <RightIcon />
+                  </a>
+                </li>
+              )}
             </ul>
           </div>
         </div>
