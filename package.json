@@ -14,6 +14,11 @@
     "predeploy": "npm run build"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.4.1",
+    "@mui/material": "^6.4.1",
+    "@mui/system": "^6.4.1",
     "axios": "^1.7.9",
     "gh-pages": "^6.3.0",
     "react": "^18.3.1",

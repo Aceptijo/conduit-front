@@ -1,8 +1,20 @@
 import { Link } from 'react-router-dom';
 import { addToFavorites, removeFromFavorites } from '../../api/articles.js';
-import LikeIcon from '../icons/LikeIcon/LikeIcon.jsx';
-import '/src/styles/global.css';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import useArticlesStore from '../../store/articlesStore.js';
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Chip,
+  ListItem,
+  Typography,
+} from '@mui/material';
+import { Stack } from '@mui/system';
 
 const ArticlePreview = ({ article, handleTagClick }) => {
   const { favoriteToggle } = useArticlesStore();
@@ -20,49 +32,76 @@ const ArticlePreview = ({ article, handleTagClick }) => {
   };
 
   return (
-    <div className="article-preview">
-      <div className="article-meta">
-        <Link to={`/profile/${article.author.username}`}>
-          <img
-            src={
-              article.author.image ||
-              `https://api.dicebear.com/6.x/micah/svg?seed=${article.author.username}`
-            }
-            alt={article.author.username}
-          />
-        </Link>
-        <div className="info">
-          <Link to={`/profile/${article.author.username}`} className="author">
-            {article.author.username}
-          </Link>
-          <span className="date">{new Date(article.createdAt).toLocaleDateString()}</span>
-        </div>
-        <button
-          className={`btn btn-sm btn-outline-primary pull-xs-right ${article.favorited ? 'active' : ''}`}
-          onClick={handleFavorite}
-        >
-          <LikeIcon />
-          {article.favoritesCount}
-        </button>
-      </div>
-      <Link to={`/article/${article.slug}`} className="preview-link">
-        <h1>{article.title}</h1>
-        <p>{article.description}</p>
-        <span>Read more...</span>
-      </Link>
-      <ul className="tag-list" style={{ float: 'right' }}>
-        {article.tagList.map((tag, index) => (
-          <Link
-            className="tag-default tag-pill tag-outline"
-            onClick={() => handleTagClick(tag)}
-            key={index}
-            to={`/?tag=${tag}`}
+    <ListItem>
+      <Card sx={{ bgcolor: 'secondary.dark', width: '100%' }}>
+        <CardContent>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Button sx={{ textTransform: 'none' }}>
+                <Avatar
+                  src={article.author.image || 'broken-image.jpg'}
+                  alt={article.author.username}
+                  sx={{ mr: '10px' }}
+                />
+                <Typography alt={article.author.username} sx={{ fontSize: '16px' }}>
+                  {article.author.username}
+                </Typography>
+              </Button>
+              <FiberManualRecordIcon
+                sx={{ width: '8px', mr: '5px', ml: '10px' }}
+                color="secondary"
+              />
+              <Typography
+                component="span"
+                alt={new Date(article.createdAt)}
+                sx={{ fontSize: '12px' }}
+                color="secondary"
+              >
+                {new Date(article.createdAt).toLocaleDateString()}
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+              <Button
+                variant={article.favorited ? 'contained' : 'outlined'}
+                onClick={handleFavorite}
+                startIcon={<FavoriteIcon />}
+              >
+                {article.favoritesCount}
+              </Button>
+            </Box>
+          </Box>
+          <Typography
+            variant="h5"
+            component={Link}
+            to={`/article/${article.slug}`}
+            sx={{ textDecoration: 'none', width: '100%' }}
+            color="primary"
           >
-            {tag}
-          </Link>
-        ))}
-      </ul>
-    </div>
+            {article.title}
+          </Typography>
+          <Typography variant="body1" color="secondary">
+            {article.description}
+          </Typography>
+          <Box>
+            <Stack direction="row" spacing={1}>
+              {article.tagList.map((tag, index) => (
+                <Chip
+                  label={`${tag}`}
+                  size="small"
+                  key={index}
+                  color="secondary"
+                  variant="outlined"
+                  clickable
+                />
+              ))}
+            </Stack>
+          </Box>
+        </CardContent>
+        <CardActions>
+          <Button>Read More</Button>
+        </CardActions>
+      </Card>
+    </ListItem>
   );
 };
 

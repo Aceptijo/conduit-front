@@ -2,10 +2,10 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import useTagsStore from '../store/tagsStore.js';
 import ArticlePreview from '../components/Article/ArticlePreview.jsx';
-import '/src/styles/global.css';
 import LeftIcon from '../components/icons/LeftIcon/LeftIcon.jsx';
 import RightIcon from '../components/icons/RightIcon/RightIcon.jsx';
 import useArticlesStore from '../store/articlesStore.js';
+import { Box, Container, List, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 
 const HomePage = () => {
   const { articles, totalPages, fetchGlobalArticles, fetchArticlesByTag, isLoading } =
@@ -41,55 +41,73 @@ const HomePage = () => {
     setCurrentPage(page);
   };
 
+  const handleTabChange = (event, tab) => {
+    setActiveTab(tab);
+  };
+
   return (
     <div className="home-page">
-      <div className="banner">
-        <div className="container">
-          <h1 className="logo-font">conduit</h1>
-          <p>A place to share your knowledge.</p>
-        </div>
-      </div>
-
-      <div className="container page">
-        <div className="row">
-          <div className="col-md-9">
-            <div className="feed-toggle">
-              <ul className="nav nav-pills outline-active">
-                <li className="nav-item">
-                  <Link
-                    className={`nav-link ${activeTab === 'global' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('global')}
-                    to="/?feed=global"
-                  >
-                    Global Feed
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link
-                    className={`nav-link ${activeTab === 'feed' ? 'active' : ''}`}
-                    onClick={() => {
-                      setActiveTab('feed');
-                      setCurrentPage(1);
-                    }}
-                    to="/?feed=your"
-                  >
-                    Your Feed
-                  </Link>
-                </li>
-                {tag && (
-                  <li className="nav-item" key={tag}>
-                    <Link
-                      className={`nav-link ${activeTab === tag ? 'active' : ''}`}
-                      onClick={() => handleTagClick(tag)}
-                      to={`/?tag=${tag}`}
-                    >
-                      {tag}
-                    </Link>
-                  </li>
-                )}
-              </ul>
-            </div>
-
+      <Box sx={{ padding: '2rem', bgcolor: 'primary.main' }}>
+        <Container
+          maxWidth="lg"
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Typography variant="h2" component="h1" sx={{ pb: '0.5rem', fontWeight: 'bold' }}>
+            conduit
+          </Typography>
+          <Typography variant="h5" component="p">
+            A place to share your knowledge.
+          </Typography>
+        </Container>
+      </Box>
+      <Container
+        maxWidth="lg"
+        sx={{ mt: '1.5rem', display: 'flex', justifyContent: 'space-between' }}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+          <ToggleButtonGroup
+            value={activeTab}
+            exclusive
+            onChange={handleTabChange}
+            aria-label="articles list"
+            sx={{ padding: '0 16px' }}
+          >
+            <ToggleButton
+              value="global"
+              component={Link}
+              to="/?feed=global"
+              aria-label="global articles"
+              color="primary"
+            >
+              Global Feed
+            </ToggleButton>
+            <ToggleButton
+              value="feed"
+              component={Link}
+              to="/?feed=your"
+              aria-label="your articles"
+              color="primary"
+            >
+              Your Feed
+            </ToggleButton>
+            {tag && (
+              <ToggleButton
+                value={tag}
+                components={Link}
+                to={`/?tag=${tag}`}
+                aria-label="article by tag"
+                color="primary"
+              >
+                {tag}
+              </ToggleButton>
+            )}
+          </ToggleButtonGroup>
+          <List sx={{ width: '100%' }}>
             {isLoading ? (
               <div>Загрузка статей...</div>
             ) : (
@@ -97,6 +115,43 @@ const HomePage = () => {
                 <ArticlePreview article={article} key={article.slug + index} />
               ))
             )}
+          </List>
+        </Box>
+        <div className="col-md-3">
+          <div className="sidebar">
+            <p>Popular Tags</p>
+            {isLoadingTags ? (
+              <div>Загрузка тэгов...</div>
+            ) : (
+              <div className="tag-list">
+                {tags?.map((tagItem) => (
+                  <Link
+                    to={`/?tag=${tagItem}`}
+                    onClick={() => {
+                      handleTagClick(tagItem);
+                    }}
+                    key={tagItem}
+                    className="tag-pill tag-default"
+                  >
+                    {tagItem}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </Container>
+
+      <div className="container page">
+        <div className="row">
+          <div className="col-md-9">
+            {/*{isLoading ? (*/}
+            {/*  <div>Загрузка статей...</div>*/}
+            {/*) : (*/}
+            {/*  articles.map((article, index) => (*/}
+            {/*    <ArticlePreview article={article} key={article.slug + index} />*/}
+            {/*  ))*/}
+            {/*)}*/}
 
             <ul className="pagination">
               {currentPage > 1 && (
@@ -163,30 +218,6 @@ const HomePage = () => {
                 </li>
               )}
             </ul>
-          </div>
-
-          <div className="col-md-3">
-            <div className="sidebar">
-              <p>Popular Tags</p>
-              {isLoadingTags ? (
-                <div>Загрузка тэгов...</div>
-              ) : (
-                <div className="tag-list">
-                  {tags?.map((tagItem) => (
-                    <Link
-                      to={`/?tag=${tagItem}`}
-                      onClick={() => {
-                        handleTagClick(tagItem);
-                      }}
-                      key={tagItem}
-                      className="tag-pill tag-default"
-                    >
-                      {tagItem}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
           </div>
         </div>
       </div>
