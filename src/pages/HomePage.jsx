@@ -8,6 +8,7 @@ import {
   Chip,
   Container,
   List,
+  ListItem,
   Pagination,
   PaginationItem,
   Skeleton,
@@ -38,7 +39,7 @@ const HomePage = () => {
       const offset = currentPage - 1;
       fetchArticlesByTag(urlTag, articlePerPage, offset);
     }
-  }, [urlTag, tags]);
+  }, [tags]);
 
   useEffect(() => {
     if (activeTab === 'global' || activeTab === 'feed') {
@@ -98,13 +99,21 @@ const HomePage = () => {
           </Tabs>
 
           <List sx={{ width: '100%' }}>
-            {isLoading ? (
-              <Skeleton variant="rounded" height={211} animation="wave" />
-            ) : (
-              articles.map((article, index) => (
-                <ArticlePreview article={article} key={article.slug + index} />
-              ))
-            )}
+            {isLoading
+              ? Array.from({ length: 4 }).map((_, index) => (
+                  <Skeleton
+                    variant="rounded"
+                    height={200}
+                    key={index}
+                    animation="wave"
+                    sx={{ bgcolor: 'secondary', m: '16px 0' }}
+                  />
+                ))
+              : articles.map((article, index) => (
+                  <ListItem key={article.slug + index} sx={{ padding: '8px 0' }}>
+                    <ArticlePreview article={article} />
+                  </ListItem>
+                ))}
           </List>
           <Pagination
             page={currentPage}
@@ -121,8 +130,16 @@ const HomePage = () => {
             )}
           />
         </Box>
-        <Box sx={{ display: 'flex', maxWidth: '25%', flexDirection: 'column', p: '5px 16px' }}>
-          <Typography variant="h6" color="primary" sx={{ m: '15px 0' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            maxWidth: '25%',
+            width: '100%',
+            flexDirection: 'column',
+            p: '5px 16px',
+          }}
+        >
+          <Typography variant="h6" color="primary" sx={{ m: '17px 0' }}>
             Popular Tags
           </Typography>
           <Box
@@ -132,22 +149,28 @@ const HomePage = () => {
               gap: '5px',
             }}
           >
-            {isLoadingTags ? (
-              <div>Loading...</div>
-            ) : (
-              tags.map((tagItem) => (
-                <Chip
-                  component={Link}
-                  to={`/?tag=${tagItem}`}
-                  label={tagItem}
-                  key={tagItem}
-                  size="small"
-                  color="secondary"
-                  onClick={() => handleTagClick(tagItem)}
-                  clickable
-                />
-              ))
-            )}
+            {isLoadingTags
+              ? Array.from({ length: tags.length || 99 }).map((_, index) => (
+                  <Skeleton
+                    variant="rounded"
+                    width={55}
+                    height={24}
+                    key={index}
+                    sx={{ bgcolor: 'secondary', borderRadius: '16px' }}
+                  />
+                ))
+              : tags.map((tagItem) => (
+                  <Chip
+                    component={Link}
+                    to={`/?tag=${tagItem}`}
+                    label={tagItem}
+                    key={tagItem}
+                    size="small"
+                    color="secondary"
+                    onClick={() => handleTagClick(tagItem)}
+                    clickable
+                  />
+                ))}
           </Box>
         </Box>
       </Container>
