@@ -2,10 +2,19 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import useTagsStore from '../store/tagsStore.js';
 import ArticlePreview from '../components/Article/ArticlePreview.jsx';
-import LeftIcon from '../components/icons/LeftIcon/LeftIcon.jsx';
-import RightIcon from '../components/icons/RightIcon/RightIcon.jsx';
 import useArticlesStore from '../store/articlesStore.js';
-import { Box, Container, List, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import {
+  Box,
+  Chip,
+  Container,
+  List,
+  Pagination,
+  PaginationItem,
+  Skeleton,
+  Tab,
+  Tabs,
+  Typography,
+} from '@mui/material';
 
 const HomePage = () => {
   const { articles, totalPages, fetchGlobalArticles, fetchArticlesByTag, isLoading } =
@@ -17,7 +26,19 @@ const HomePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const tag = queryParams.get('tag');
+  const urlTag = queryParams.get('tag');
+
+  useEffect(() => {
+    fetchTags();
+  }, [fetchTags]);
+
+  useEffect(() => {
+    if (urlTag) {
+      setActiveTab(urlTag);
+      const offset = currentPage - 1;
+      fetchArticlesByTag(urlTag, articlePerPage, offset);
+    }
+  }, [urlTag, tags]);
 
   useEffect(() => {
     if (activeTab === 'global' || activeTab === 'feed') {
@@ -29,20 +50,15 @@ const HomePage = () => {
   const handleTagClick = (selectedTag) => {
     setActiveTab(selectedTag);
     navigate(`/?tag=${selectedTag}`);
-    const offset = currentPage - 1;
-    fetchArticlesByTag(selectedTag, articlePerPage, offset);
   };
 
-  useEffect(() => {
-    fetchTags();
-  }, [fetchTags]);
-
-  const handlePageChange = (page) => {
+  const handlePageChange = (event, page) => {
     setCurrentPage(page);
   };
 
   const handleTabChange = (event, tab) => {
     setActiveTab(tab);
+    setCurrentPage(1);
   };
 
   return (
@@ -70,157 +86,71 @@ const HomePage = () => {
         sx={{ mt: '1.5rem', display: 'flex', justifyContent: 'space-between' }}
       >
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-          <ToggleButtonGroup
+          <Tabs
             value={activeTab}
-            exclusive
             onChange={handleTabChange}
-            aria-label="articles list"
-            sx={{ padding: '0 16px' }}
+            textColor="primary"
+            indicatorColor="primary"
           >
-            <ToggleButton
-              value="global"
-              component={Link}
-              to="/?feed=global"
-              aria-label="global articles"
-              color="primary"
-            >
-              Global Feed
-            </ToggleButton>
-            <ToggleButton
-              value="feed"
-              component={Link}
-              to="/?feed=your"
-              aria-label="your articles"
-              color="primary"
-            >
-              Your Feed
-            </ToggleButton>
-            {tag && (
-              <ToggleButton
-                value={tag}
-                components={Link}
-                to={`/?tag=${tag}`}
-                aria-label="article by tag"
-                color="primary"
-              >
-                {tag}
-              </ToggleButton>
-            )}
-          </ToggleButtonGroup>
+            <Tab value="global" label="Global Feed" component={Link} to={`/?global=feed`} />
+            <Tab value="feed" label="Your Feed" component={Link} to={`/?your=feed`} />
+            {urlTag && tags.includes(urlTag) && <Tab value={urlTag} label={urlTag} />}
+          </Tabs>
+
           <List sx={{ width: '100%' }}>
             {isLoading ? (
-              <div>Загрузка статей...</div>
+              <Skeleton variant="rounded" height={211} animation="wave" />
             ) : (
               articles.map((article, index) => (
                 <ArticlePreview article={article} key={article.slug + index} />
               ))
             )}
           </List>
-        </Box>
-        <div className="col-md-3">
-          <div className="sidebar">
-            <p>Popular Tags</p>
-            {isLoadingTags ? (
-              <div>Загрузка тэгов...</div>
-            ) : (
-              <div className="tag-list">
-                {tags?.map((tagItem) => (
-                  <Link
-                    to={`/?tag=${tagItem}`}
-                    onClick={() => {
-                      handleTagClick(tagItem);
-                    }}
-                    key={tagItem}
-                    className="tag-pill tag-default"
-                  >
-                    {tagItem}
-                  </Link>
-                ))}
-              </div>
+          <Pagination
+            page={currentPage}
+            count={totalPages}
+            onChange={handlePageChange}
+            color="primary"
+            sx={{ display: 'flex', justifyContent: 'center', mt: '24px' }}
+            renderItem={(item) => (
+              <PaginationItem
+                component={Link}
+                to={`/?${activeTab}=feed/inbox${item.page === 1 ? '' : `?page=${item.page}`}`}
+                {...item}
+              />
             )}
-          </div>
-        </div>
+          />
+        </Box>
+        <Box sx={{ display: 'flex', maxWidth: '25%', flexDirection: 'column', p: '5px 16px' }}>
+          <Typography variant="h6" color="primary" sx={{ m: '15px 0' }}>
+            Popular Tags
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '5px',
+            }}
+          >
+            {isLoadingTags ? (
+              <div>Loading...</div>
+            ) : (
+              tags.map((tagItem) => (
+                <Chip
+                  component={Link}
+                  to={`/?tag=${tagItem}`}
+                  label={tagItem}
+                  key={tagItem}
+                  size="small"
+                  color="secondary"
+                  onClick={() => handleTagClick(tagItem)}
+                  clickable
+                />
+              ))
+            )}
+          </Box>
+        </Box>
       </Container>
-
-      <div className="container page">
-        <div className="row">
-          <div className="col-md-9">
-            {/*{isLoading ? (*/}
-            {/*  <div>Загрузка статей...</div>*/}
-            {/*) : (*/}
-            {/*  articles.map((article, index) => (*/}
-            {/*    <ArticlePreview article={article} key={article.slug + index} />*/}
-            {/*  ))*/}
-            {/*)}*/}
-
-            <ul className="pagination">
-              {currentPage > 1 && (
-                <li className="page-item">
-                  <a
-                    className="page-link arrow"
-                    href="#"
-                    onClick={() => handlePageChange(currentPage - 1)}
-                  >
-                    <LeftIcon />
-                  </a>
-                </li>
-              )}
-              {currentPage > 2 && (
-                <li className="page-item">
-                  <a className="page-link" href="#" onClick={() => handlePageChange(1)}>
-                    1
-                  </a>
-                </li>
-              )}
-              {currentPage > 3 && (
-                <li className="page-item disabled">
-                  <span className="page-link">...</span>
-                </li>
-              )}
-
-              {Array.from({ length: 3 }).map((_, index) => {
-                const page = currentPage - 1 + index;
-                if (page > 0 && page <= totalPages) {
-                  return (
-                    <li className={`page-item ${currentPage === page ? 'active' : ''}`} key={page}>
-                      <a className="page-link" href="#" onClick={() => handlePageChange(page)}>
-                        {page}
-                      </a>
-                    </li>
-                  );
-                }
-                return null;
-              })}
-
-              {currentPage < totalPages - 2 && (
-                <li className="page-item disabled">
-                  <span className="page-link">...</span>
-                </li>
-              )}
-
-              {currentPage < totalPages - 1 && (
-                <li className="page-item">
-                  <a href="#" className="page-link" onClick={() => handlePageChange(totalPages)}>
-                    {totalPages}
-                  </a>
-                </li>
-              )}
-
-              {currentPage < totalPages && (
-                <li className="page-item">
-                  <a
-                    href="#"
-                    className="page-link arrow"
-                    onClick={() => handlePageChange(currentPage + 1)}
-                  >
-                    <RightIcon />
-                  </a>
-                </li>
-              )}
-            </ul>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

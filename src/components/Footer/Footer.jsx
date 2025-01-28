@@ -1,16 +1,33 @@
+import { Box, Container, Typography } from '@mui/material';
+
 const Footer = () => {
   return (
-    <footer>
-      <div className="container">
-        <a href="/" className="logo-font">
+    <Box component="footer" sx={{ bgcolor: 'secondary.dark' }}>
+      <Container maxWidth="lg" sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+        <Typography
+          variant="caption"
+          component="a"
+          href="/"
+          color="primary"
+          sx={{ textDecoration: 'none' }}
+        >
           conduit
-        </a>
-        <span className="attribution">
+        </Typography>
+        <Typography variant="caption" component="span">
           An interactive learning project from
-          <a href="https://thinkster.io"> Thinkster</a>. Code &amp; design licensed under MIT.
-        </span>
-      </div>
-    </footer>
+          <Typography
+            variant="caption"
+            component="a"
+            href="https://thinkster.io"
+            color="primary"
+            sx={{ textDecoration: 'none' }}
+          >
+            {` Thinkster`}
+          </Typography>
+          . Code design licensed under MIT.
+        </Typography>
+      </Container>
+    </Box>
   );
 };
 

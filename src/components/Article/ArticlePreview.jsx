@@ -3,17 +3,7 @@ import { addToFavorites, removeFromFavorites } from '../../api/articles.js';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import useArticlesStore from '../../store/articlesStore.js';
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Chip,
-  ListItem,
-  Typography,
-} from '@mui/material';
+import { Avatar, Box, Button, Card, CardContent, Chip, ListItem, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 
 const ArticlePreview = ({ article, handleTagClick }) => {
@@ -32,7 +22,7 @@ const ArticlePreview = ({ article, handleTagClick }) => {
   };
 
   return (
-    <ListItem>
+    <ListItem sx={{ padding: '8px 0' }}>
       <Card sx={{ bgcolor: 'secondary.dark', width: '100%' }}>
         <CardContent>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -65,24 +55,32 @@ const ArticlePreview = ({ article, handleTagClick }) => {
                 variant={article.favorited ? 'contained' : 'outlined'}
                 onClick={handleFavorite}
                 startIcon={<FavoriteIcon />}
+                sx={{ mr: '8px' }}
               >
                 {article.favoritesCount}
               </Button>
             </Box>
           </Box>
-          <Typography
-            variant="h5"
+          <Button
             component={Link}
             to={`/article/${article.slug}`}
-            sx={{ textDecoration: 'none', width: '100%' }}
+            fullWidth
+            sx={{ textDecoration: 'none', fontSize: '20px', justifyContent: 'flex-start' }}
             color="primary"
           >
             {article.title}
-          </Typography>
-          <Typography variant="body1" color="secondary">
+          </Button>
+          <Typography variant="body1" color="secondary" sx={{ padding: '6px 8px' }}>
             {article.description}
           </Typography>
-          <Box>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '6px 8px',
+            }}
+          >
             <Stack direction="row" spacing={1}>
               {article.tagList.map((tag, index) => (
                 <Chip
@@ -97,9 +95,6 @@ const ArticlePreview = ({ article, handleTagClick }) => {
             </Stack>
           </Box>
         </CardContent>
-        <CardActions>
-          <Button>Read More</Button>
-        </CardActions>
       </Card>
     </ListItem>
   );
