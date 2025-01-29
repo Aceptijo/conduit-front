@@ -1,19 +1,30 @@
-const ArticleContent = ({article}) => {
+import { Box, Chip, Typography } from '@mui/material';
+import { Stack } from '@mui/system';
+
+const ArticleContent = ({ article }) => {
   return (
-    <div className="row article-content">
-      <div className="col-md-12">
-        {/*<h2 id="introducing-ionic">{article?.title}</h2>*/}
-        <p>{article?.body}</p>
-        {/*<p> It's a great solution for learning how other frameworks work.</p>*/}
-        <ul className="tag-list">
-          {article?.tagList?.map((tag, index) => (
-            <li className="tag-default tag-pill tag-outline" key={index}>
-              {tag}
-            </li>
+    <Box>
+      <Typography variant="body1" color="secondary">
+        {article.body}
+      </Typography>
+      <Box>
+        <Stack
+          spacing={5}
+          sx={{ display: 'flex', flexDirection: 'row', alignItems: 'end', gap: '5px' }}
+        >
+          {article.tagList.map((tag, index) => (
+            <Chip
+              label={tag}
+              key={index}
+              clickable
+              color="secondary"
+              size="small"
+              variant="filled"
+            />
           ))}
-        </ul>
-      </div>
-    </div>
+        </Stack>
+      </Box>
+    </Box>
   );
 };
 

@@ -1,11 +1,12 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { addToFavorites, deleteArticle, getArticle, removeFromFavorites } from '../api/articles.js';
-import ArticleActions from '../components/Article/ArticleActions.jsx';
 import ArticleContent from '../components/Article/ArticleContent.jsx';
 import useAuthStore from '../store/authStore.js';
 import { followUser, unfollowUser } from '../api/user.js';
 import CommentsSection from '../components/Article/Comments/CommentsSection.jsx';
+import { Box, Container, Typography } from '@mui/material';
+import ArticleActions from '../components/Article/ArticleActions.jsx';
 
 const ArticlePage = () => {
   const { slug } = useParams();
@@ -26,6 +27,7 @@ const ArticlePage = () => {
         setIsFavorited(response.favorited);
         setIsFollowing(response.author.following);
         setIsLoading(false);
+        console.log('фетч в артикл пейдже', response.tagList);
       } catch (err) {
         console.error('Не удалось получить данные о статье: ', err);
       } finally {
@@ -93,10 +95,17 @@ const ArticlePage = () => {
   }
 
   return (
-    <div className="article-page">
-      <div className="banner">
-        <div className="container">
-          <h1>{article?.title}</h1>
+    <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+      <Box
+        sx={{
+          p: '2rem 0',
+          bgcolor: 'secondary.dark',
+        }}
+      >
+        <Container maxWidth="lg">
+          <Typography variant="h3" color="secondary" sx={{ mb: '2rem' }}>
+            {article.title}
+          </Typography>
           <ArticleActions
             article={article}
             onFavorite={handleFavorite}
@@ -106,15 +115,14 @@ const ArticlePage = () => {
             isFollowing={isFollowing}
             onFollow={handleFollow}
           />
-        </div>
-      </div>
-
-      <div className="container page">
+        </Container>
+      </Box>
+      <Container maxWidth="lg" sx={{ mt: '2rem' }}>
         <ArticleContent article={article} />
         <hr />
         <CommentsSection slug={slug} />
-      </div>
-    </div>
+      </Container>
+    </Box>
   );
 };
 

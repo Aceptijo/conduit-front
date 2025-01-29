@@ -30,16 +30,16 @@ const HomePage = () => {
   const urlTag = queryParams.get('tag');
 
   useEffect(() => {
-    fetchTags();
-  }, [fetchTags]);
-
-  useEffect(() => {
     if (urlTag) {
-      setActiveTab(urlTag);
+      setActiveTab('tag');
       const offset = currentPage - 1;
       fetchArticlesByTag(urlTag, articlePerPage, offset);
     }
-  }, [tags]);
+  }, [urlTag]);
+
+  useEffect(() => {
+    fetchTags();
+  }, [fetchTags]);
 
   useEffect(() => {
     if (activeTab === 'global' || activeTab === 'feed') {
@@ -49,7 +49,6 @@ const HomePage = () => {
   }, [activeTab, currentPage]);
 
   const handleTagClick = (selectedTag) => {
-    setActiveTab(selectedTag);
     navigate(`/?tag=${selectedTag}`);
   };
 
@@ -63,9 +62,22 @@ const HomePage = () => {
   };
 
   return (
-    <div className="home-page">
-      <Box sx={{ padding: '2rem', bgcolor: 'primary.main' }}>
-        <Container
+    <Container maxWidth="lg">
+      <Box
+        sx={{
+          padding: '2rem',
+          bgcolor: 'primary.main',
+          position: 'absolute',
+          top: '0',
+          left: '0',
+          right: '0',
+          mt: '4rem',
+          zIndex: -1,
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Box
           maxWidth="lg"
           sx={{
             display: 'flex',
@@ -80,12 +92,9 @@ const HomePage = () => {
           <Typography variant="h5" component="p">
             A place to share your knowledge.
           </Typography>
-        </Container>
+        </Box>
       </Box>
-      <Container
-        maxWidth="lg"
-        sx={{ mt: '1.5rem', display: 'flex', justifyContent: 'space-between' }}
-      >
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: '12.5rem' }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
           <Tabs
             value={activeTab}
@@ -95,7 +104,7 @@ const HomePage = () => {
           >
             <Tab value="global" label="Global Feed" component={Link} to={`/?global=feed`} />
             <Tab value="feed" label="Your Feed" component={Link} to={`/?your=feed`} />
-            {urlTag && tags.includes(urlTag) && <Tab value={urlTag} label={urlTag} />}
+            {urlTag && <Tab value="tag" label={urlTag} component={Link} to={`/?tag=${urlTag}`} />}
           </Tabs>
 
           <List sx={{ width: '100%' }}>
@@ -111,7 +120,7 @@ const HomePage = () => {
                 ))
               : articles.map((article, index) => (
                   <ListItem key={article.slug + index} sx={{ padding: '8px 0' }}>
-                    <ArticlePreview article={article} />
+                    <ArticlePreview article={article} handleTagClick={handleTagClick} />
                   </ListItem>
                 ))}
           </List>
@@ -124,7 +133,7 @@ const HomePage = () => {
             renderItem={(item) => (
               <PaginationItem
                 component={Link}
-                to={`/?${activeTab}=feed/inbox${item.page === 1 ? '' : `?page=${item.page}`}`}
+                to={`/?${activeTab}=feed/${item.page === 1 ? '' : `&page=${item.page}`}`}
                 {...item}
               />
             )}
@@ -173,8 +182,8 @@ const HomePage = () => {
                 ))}
           </Box>
         </Box>
-      </Container>
-    </div>
+      </Box>
+    </Container>
   );
 };
 

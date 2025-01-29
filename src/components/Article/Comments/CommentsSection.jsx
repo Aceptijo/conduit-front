@@ -1,10 +1,12 @@
-import {useEffect, useState} from "react";
-import {addComment, deleteComment, getComments} from "../../../api/articles.js";
-import useAuthStore from "../../../store/authStore.js";
-import {Link} from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { addComment, deleteComment, getComments } from '../../../api/articles.js';
+import useAuthStore from '../../../store/authStore.js';
+import { Link } from 'react-router-dom';
+import { Avatar, Box, Button, TextField, Typography } from '@mui/material';
+import { DeleteOutlined } from '@mui/icons-material';
 
-const CommentsSection = ({slug}) => {
-  const {user} = useAuthStore();
+const CommentsSection = ({ slug }) => {
+  const { user } = useAuthStore();
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -19,7 +21,7 @@ const CommentsSection = ({slug}) => {
       } finally {
         setIsLoading(false);
       }
-    }
+    };
     fetchComments();
   }, [slug]);
 
@@ -34,81 +36,142 @@ const CommentsSection = ({slug}) => {
     } catch (err) {
       console.error('Не удалось добавить комментарий: ', err);
     }
-  }
+  };
 
   const handleDeleteComment = async (commentId) => {
     try {
       await deleteComment(slug, commentId);
-      setComments((prev) => prev.filter(comment => comment.id !== commentId));
+      setComments((prev) => prev.filter((comment) => comment.id !== commentId));
     } catch (err) {
       console.error('Не удалось удалить комментарий: ', err);
     }
-  }
+  };
 
-  if (isLoading) return <div>Загрузка комментариев...</div>
+  if (isLoading) return <div>Загрузка комментариев...</div>;
 
   return (
-    <div className="row">
-      <div className="col-xs-12 col-md-8 offset-md-2">
+    <Box>
+      <Box
+        maxWidth="66.6%"
+        sx={{ ml: '16.6%', display: 'flex', flexDirection: 'column', gap: '10px' }}
+      >
         {user ? (
-          <form className="card comment-form" onSubmit={handleAddComment}>
-            <div className="card-block">
-            <textarea
-              className="form-control"
-              placeholder="Write a comment..."
-              rows="3"
+          <Box
+            component="form"
+            border="1px solid"
+            borderColor="secondary.main"
+            sx={{ padding: '1rem' }}
+          >
+            <TextField
+              id="outlined-basic"
               value={newComment}
-              onChange={event => setNewComment(event.target.value)}
-            ></textarea>
-            </div>
-            <div className="card-footer">
-              <img
-                src={user.image || 'https://avatar.iran.liara.run/public/48'}
-                className="comment-author-img"/>
-              <button className="btn btn-sm btn-primary" type={"submit"}>
-                Post Comment
-              </button>
-            </div>
-          </form>
+              onChange={(event) => setNewComment(event.target.value)}
+              multiline
+              rows={3}
+              label="Write a comment"
+              fullWidth
+            />
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                pt: '1rem',
+              }}
+            >
+              <Avatar src={user.image || 'broken-image.jpg'} />
+              <Button onClick={handleAddComment}>Post comment</Button>
+            </Box>
+          </Box>
         ) : (
-          <div>
-            <Link to={'/login'}>Sign in</Link> or <Link to={'/register'}>Sign up</Link> to add
-            comments.
-          </div>
+          <Box sx={{ display: 'flex', gap: '5px', justifyContent: 'center' }}>
+            <Typography
+              variant="subtitle1"
+              component={Link}
+              to={`/login`}
+              color="primary"
+              sx={{ textDecoration: 'none' }}
+            >
+              Login
+            </Typography>
+            <Typography variant="subtitle1" color="secondary">
+              or
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              component={Link}
+              to={`/register`}
+              color="primary"
+              sx={{ textDecoration: 'none' }}
+            >
+              Register
+            </Typography>
+            <Typography variant="subtitle1" color="secondary">
+              to add comments.
+            </Typography>
+          </Box>
         )}
         {comments.length > 0 ? (
           comments.map((comment, index) => (
-            <div className="card" key={index}>
-              <div className="card-block">
-                <p className="card-text">
-                  {comment.body}
-                </p>
-              </div>
-              <div className="card-footer">
-                <Link to={`/profile/${comment.author?.username}`} className="comment-author">
-                  <img
-                    src={comment.author?.image || "https://avatar.iran.liara.run/public/48"}
-                    className="comment-author-img"/>
-                </Link>
-                &nbsp;
-                <Link to={`/profile/${comment.author?.username}`} className="comment-author">
-                  {comment.author?.username}
-                </Link>
-                <span className="date-posted">{comment.createdAt}</span>
+            <Box border="1px solid" borderColor="secondary.main" sx={{ width: '100%' }} key={index}>
+              <Typography
+                variant="body1"
+                noWrap={false}
+                color="secondary"
+                sx={{ padding: '1rem', overflowWrap: 'break-word', wordWrap: 'break-word' }}
+              >
+                {comment.body}
+              </Typography>
+              <Box
+                sx={{
+                  bgcolor: 'secondary.dark',
+                  padding: '0.5rem 1rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                }}
+              >
+                <Avatar
+                  component={Link}
+                  to={`/profile/${comment.author.username}`}
+                  src={comment.author.image || 'broken-image.jpg'}
+                />
+                <Typography
+                  variant="subtitle2"
+                  component={Link}
+                  to={`/profile/${comment.author.username}`}
+                  color="primary"
+                  sx={{ textDecoration: 'none' }}
+                >
+                  {comment.author.username}
+                </Typography>
+                <Typography variant="subtitle2" color="secondary">
+                  {new Date(comment.createdAt).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </Typography>
                 {user && user.username === comment.author?.username && (
-                  <span className="mod-options" onClick={() => handleDeleteComment(comment.id)}>
-                    <i className="ion-trash-a">Delete</i>
-                  </span>
+                  <Button
+                    variant="outlined"
+                    onClick={() => handleDeleteComment(comment.id)}
+                    startIcon={<DeleteOutlined />}
+                    color="error"
+                    sx={{ ml: 'auto' }}
+                  >
+                    Delete
+                  </Button>
                 )}
-              </div>
-            </div>
+              </Box>
+            </Box>
           ))
         ) : (
-          <div>No comments yet...</div>
+          <Typography align="center" color="primary">
+            No comment yet
+          </Typography>
         )}
-
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

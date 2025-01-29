@@ -84,11 +84,14 @@ const ArticlePreview = ({ article, handleTagClick }) => {
           <Stack direction="row" spacing={1}>
             {article.tagList.map((tag, index) => (
               <Chip
+                component={Link}
+                to={`/?tag=${tag}`}
                 label={`${tag}`}
                 size="small"
                 key={index}
                 color="secondary"
                 variant="outlined"
+                onClick={() => handleTagClick(tag)}
                 clickable
               />
             ))}

@@ -1,8 +1,13 @@
 import { Link } from 'react-router-dom';
-import LikeIcon from '../icons/LikeIcon/LikeIcon.jsx';
-import DeleteIcon from '../icons/DeleteIcon/DeleteIcon.jsx';
-import FollowIcon from '../icons/FollowIcon/FollowIcon.jsx';
-import EditIcon from '../icons/EditIcon/EditIcon.jsx';
+import { Avatar, Box, Button, Typography } from '@mui/material';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import {
+  AddOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  FavoriteBorder,
+  RemoveOutlined,
+} from '@mui/icons-material';
 
 const ArticleActions = ({
   article,
@@ -14,53 +19,66 @@ const ArticleActions = ({
   onFollow,
 }) => {
   return (
-    <div className="article-actions">
-      <div className="article-meta">
-        <Link to={`/profile/${article?.author?.username}`}>
-          <img src={article?.author?.image || 'https://avatar.iran.liara.run/public/48'} />
-        </Link>
-        <div className="info">
-          <Link to={`/profile/${article?.author?.username}`} className="author">
-            {article?.author?.username}
-          </Link>
-          <span className="date">{new Date(article?.createdAt).toLocaleDateString()}</span>
-        </div>
-
-        {!isAuthor && (
-          <button
-            className={`btn btn-sm btn-outline-secondary ${isFollowing ? 'active' : ''}`}
-            onClick={onFollow}
+    <Box>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <Typography component={Link} to={`/profile/${article.author.username}`}>
+          <Avatar src={article.author.image || 'broken-image.jpg'} />
+        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography
+            component={Link}
+            to={`/profile/${article.author.username}`}
+            color="primary"
+            sx={{ textDecoration: 'none' }}
           >
-            <FollowIcon />
+            {article.author.username}
+          </Typography>
+          <Typography component="span" variant="caption" color="secondary">
+            {new Date(article.createdAt).toLocaleDateString()}
+          </Typography>
+        </Box>
+        {!isAuthor && (
+          <Button
+            variant={isFollowing ? 'contained' : 'outlined'}
+            startIcon={isFollowing ? <RemoveOutlined /> : <AddOutlined />}
+            onClick={onFollow}
+            color="secondary"
+          >
             {isFollowing
-              ? `Unfollow ${article?.author?.username}`
-              : `Follow ${article?.author?.username}`}
-            <span className="counter"> ({article?.author?.followersCount})</span>
-          </button>
+              ? `Unfollow ${article.author.username}`
+              : `Follow ${article.author.username}`}
+          </Button>
         )}
-
-        <button
-          className={`btn btn-sm btn-outline-primary ${isFavorited ? 'active' : ''} `}
+        <Button
+          variant={isFavorited ? 'contained' : 'outlined'}
+          startIcon={isFavorited ? <FavoriteIcon /> : <FavoriteBorder />}
           onClick={onFavorite}
         >
-          <LikeIcon />
-          {isFavorited ? `Unfavorite` : `Favorite`}
-          <span className="counter">({article?.favoritesCount})</span>
-        </button>
-
+          {isFavorited ? 'Unfavorite' : 'Favorite'}
+        </Button>
         {isAuthor && (
-          <>
-            <Link to={`/editor/${article.slug}`} className="btn btn-sm btn-outline-secondary">
-              <EditIcon /> Edit Article
-            </Link>
-            <button className="btn btn-sm btn-outline-danger" onClick={onDelete}>
-              <DeleteIcon />
-              Delete Article
-            </button>
-          </>
+          <Button
+            variant="outlined"
+            startIcon={<EditOutlined />}
+            color="secondary"
+            component={Link}
+            to={`/editor/${article.slug}`}
+          >
+            Edit Article
+          </Button>
         )}
-      </div>
-    </div>
+        {isAuthor && (
+          <Button
+            variant="outlined"
+            startIcon={<DeleteOutlined />}
+            color="error"
+            onClick={onDelete}
+          >
+            Delete Article
+          </Button>
+        )}
+      </Box>
+    </Box>
   );
 };
 
