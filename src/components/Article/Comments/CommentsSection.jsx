@@ -56,12 +56,7 @@ const CommentsSection = ({ slug }) => {
         sx={{ ml: '16.6%', display: 'flex', flexDirection: 'column', gap: '10px' }}
       >
         {user ? (
-          <Box
-            component="form"
-            border="1px solid"
-            borderColor="secondary.main"
-            sx={{ padding: '1rem' }}
-          >
+          <Box component="form" sx={{ padding: '1rem', bgcolor: 'secondary.dark' }}>
             <TextField
               id="outlined-basic"
               value={newComment}
@@ -112,7 +107,7 @@ const CommentsSection = ({ slug }) => {
         )}
         {comments.length > 0 ? (
           comments.map((comment, index) => (
-            <Box border="1px solid" borderColor="secondary.main" sx={{ width: '100%' }} key={index}>
+            <Box sx={{ width: '100%', bgcolor: 'secondary.dark' }} key={index}>
               <Typography
                 variant="body1"
                 noWrap={false}
@@ -123,7 +118,7 @@ const CommentsSection = ({ slug }) => {
               </Typography>
               <Box
                 sx={{
-                  bgcolor: 'secondary.dark',
+                  bgcolor: 'secondary.main',
                   padding: '0.5rem 1rem',
                   display: 'flex',
                   alignItems: 'center',

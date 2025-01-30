@@ -1,10 +1,12 @@
-import useAuthStore from "../../store/authStore.js";
-import {useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
-import axiosInstance from "../../utils/axiosInstance.js";
+import useAuthStore from '../../store/authStore.js';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import axiosInstance from '../../utils/axiosInstance.js';
+import { Box, Button, Container, TextField, Typography } from '@mui/material';
+import { Logout } from '@mui/icons-material';
 
 const Settings = () => {
-  const {user, setUser, clearUser, token} = useAuthStore();
+  const { user, setUser, clearUser, token } = useAuthStore();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -21,19 +23,19 @@ const Settings = () => {
         username: user.username || '',
         email: user.email || '',
         bio: user.bio || '',
-        image: '',
+        image: user.image || '',
         password: '',
-      })
+      });
     }
   }, [user]);
 
   const handleChange = (event) => {
-    const {name, value} = event.target;
-    setFormData(prev => ({
+    const { id, value } = event.target;
+    setFormData((prev) => ({
       ...prev,
-      [name]: value,
-    }))
-  }
+      [id]: value,
+    }));
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -49,100 +51,87 @@ const Settings = () => {
     try {
       const response = await axiosInstance.put('/user', {
         user: updatedData,
-      })
+      });
       const updatedUser = response.data.user;
       setUser(updatedUser, token);
-      navigate(`/profile/${updatedUser.username}`)
+      navigate(`/profile/${updatedUser.username}`);
     } catch (err) {
-      console.error('Ошибка обновления профиля: ', err);
-      setError('Не удалось обновить профиль. Проверьте данные и попробуйте снова.')
+      if (err.response && err.response.status === 401) {
+        setError('Не удалось обновить профиль. Повторите вход.');
+        navigate('/login');
+      } else {
+        console.error('Ошибка обновления профиля: ', err);
+        setError('Не удалось обновить профиль. Проверьте данные и попробуйте снова.');
+      }
     }
-  }
+  };
 
   const handleLogout = () => {
     clearUser();
-    navigate('/')
-  }
+    navigate('/');
+  };
 
   return (
-    <div className="settings-page">
-      <div className="container page">
-        <div className="row">
-          <div className="col-md-6 offset-md-3 col-xs-12">
-            <h1 className="text-xs-center">Your Settings</h1>
-
-            {error && (
-              <ul className="error-messages">
-                <li>{error}</li>
-              </ul>
-            )}
-
-
-            <form onSubmit={handleSubmit}>
-              <fieldset>
-                <fieldset className="form-group">
-                  <input
-                    className="form-control"
-                    type="text"
-                    placeholder="URL of profile picture"
-                    name='image'
-                    value={formData.image}
-                    onChange={handleChange}
-                  />
-                </fieldset>
-                <fieldset className="form-group">
-                  <input
-                    className="form-control form-control-lg"
-                    type="text"
-                    name='username'
-                    placeholder="Your Name"
-                    value={formData.username}
-                    onChange={handleChange}
-                  />
-                </fieldset>
-                <fieldset className="form-group">
-                  <textarea
-                    className="form-control form-control-lg"
-                    rows="8"
-                    name='bio'
-                    placeholder="Short bio about you"
-                    value={formData.bio}
-                    onChange={handleChange}
-                  ></textarea>
-                </fieldset>
-                <fieldset className="form-group">
-                  <input
-                    className="form-control form-control-lg"
-                    type="email"
-                    name='email'
-                    placeholder="example@gmail.com"
-                    value={formData.email}
-                    onChange={handleChange}
-                  />
-                </fieldset>
-                <fieldset className="form-group">
-                  <input
-                    className="form-control form-control-lg"
-                    name='password'
-                    type="password"
-                    placeholder="New Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                  />
-                </fieldset>
-                <button className="btn btn-lg btn-primary pull-xs-right" type='submit'>
-                  Update Settings
-                </button>
-              </fieldset>
-            </form>
-            <hr/>
-            <button onClick={handleLogout} className="btn btn-outline-danger">Or click here to
-              logout.
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Box>
+      <Container maxWidth="sm">
+        <Typography variant="h4" color="primary" align="center" sx={{ p: '1rem' }}>
+          Your Settings
+        </Typography>
+        <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+          <TextField
+            id="image"
+            label="URL of profile picture"
+            fullWidth
+            value={formData.image}
+            onChange={(event) => handleChange(event)}
+          />
+          <TextField
+            id="username"
+            label="Your name"
+            fullWidth
+            value={formData.username}
+            onChange={handleChange}
+          />
+          <TextField
+            id="bio"
+            label="Short bio about you"
+            fullWidth
+            multiline
+            rows={5}
+            value={formData.bio}
+            onChange={handleChange}
+          />
+          <TextField
+            id="email"
+            label="Your Email example@gmail.com"
+            fullWidth
+            value={formData.email}
+            onChange={handleChange}
+          />
+          <TextField
+            id="password"
+            label="New Password"
+            fullWidth
+            type="password"
+            value={formData.password}
+            onChange={handleChange}
+          />
+          <Button
+            variant="contained"
+            sx={{ p: '0.75rem 1.25rem', alignSelf: 'end' }}
+            onClick={handleSubmit}
+          >
+            Update Settings
+          </Button>
+        </Box>
+        <Box>
+          <hr />
+          <Button variant="outlined" color="error" startIcon={<Logout />} onClick={handleLogout}>
+            Log out
+          </Button>
+        </Box>
+      </Container>
+    </Box>
   );
 };
 

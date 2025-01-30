@@ -7,8 +7,6 @@ import {
   Box,
   Chip,
   Container,
-  List,
-  ListItem,
   Pagination,
   PaginationItem,
   Skeleton,
@@ -106,24 +104,19 @@ const HomePage = () => {
             <Tab value="feed" label="Your Feed" component={Link} to={`/?your=feed`} />
             {urlTag && <Tab value="tag" label={urlTag} component={Link} to={`/?tag=${urlTag}`} />}
           </Tabs>
-
-          <List sx={{ width: '100%' }}>
-            {isLoading
-              ? Array.from({ length: 4 }).map((_, index) => (
-                  <Skeleton
-                    variant="rounded"
-                    height={200}
-                    key={index}
-                    animation="wave"
-                    sx={{ bgcolor: 'secondary', m: '16px 0' }}
-                  />
-                ))
-              : articles.map((article, index) => (
-                  <ListItem key={article.slug + index} sx={{ padding: '8px 0' }}>
-                    <ArticlePreview article={article} handleTagClick={handleTagClick} />
-                  </ListItem>
-                ))}
-          </List>
+          {isLoading
+            ? Array.from({ length: 4 }).map((_, index) => (
+                <Skeleton
+                  variant="rounded"
+                  height={210}
+                  key={index}
+                  animation="wave"
+                  sx={{ bgcolor: 'secondary', mb: '1rem' }}
+                />
+              ))
+            : articles?.map((article, index) => (
+                <ArticlePreview article={article} handleTagClick={handleTagClick} key={index} />
+              ))}
           <Pagination
             page={currentPage}
             count={totalPages}
@@ -148,7 +141,7 @@ const HomePage = () => {
             p: '5px 16px',
           }}
         >
-          <Typography variant="h6" color="primary" sx={{ m: '17px 0' }}>
+          <Typography variant="h6" color="primary" sx={{ mb: '10px' }}>
             Popular Tags
           </Typography>
           <Box

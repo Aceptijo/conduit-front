@@ -22,7 +22,7 @@ const ArticlePreview = ({ article, handleTagClick }) => {
   };
 
   return (
-    <Card sx={{ bgcolor: 'secondary.dark', width: '100%' }}>
+    <Card sx={{ bgcolor: 'secondary.dark', width: '100%', mb: '1rem' }}>
       <CardContent>
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
