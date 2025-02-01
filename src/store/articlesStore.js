@@ -27,6 +27,7 @@ const useArticlesStore = create((set) => ({
     set({ articles: [] });
     try {
       const response = await getGlobalArticles(type, limit, offset);
+      console.log(response);
       set({
         articles: response.articles,
         articlesCount: response.articlesCount,

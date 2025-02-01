@@ -9,13 +9,17 @@ const LoginForm = ({ email, password, handleLogin, onEmailChange, onPasswordChan
       <TextField
         label="Email"
         placeholder="example@gmail.com"
+        variant="filled"
+        color="secondary"
         fullWidth
         value={email}
         onChange={(event) => onEmailChange(event.target.value)}
       />
       <TextField
         label="Password"
-        placeholder="****"
+        placeholder="******"
+        variant="filled"
+        color="secondary"
         fullWidth
         value={password}
         onChange={(event) => onPasswordChange(event.target.value)}
@@ -26,7 +30,7 @@ const LoginForm = ({ email, password, handleLogin, onEmailChange, onPasswordChan
         onClick={handleLogin}
         sx={{ m: '2rem 0', p: '1rem' }}
       >
-        Log In
+        LOGIN
       </Button>
     </Box>
   );

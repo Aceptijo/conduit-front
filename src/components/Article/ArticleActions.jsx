@@ -1,13 +1,9 @@
 import { Link } from 'react-router-dom';
 import { Avatar, Box, Button, Typography } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import {
-  AddOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  FavoriteBorder,
-  RemoveOutlined,
-} from '@mui/icons-material';
+import { AddOutlined, FavoriteBorder, RemoveOutlined } from '@mui/icons-material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const ArticleActions = ({
   article,
@@ -59,7 +55,7 @@ const ArticleActions = ({
         {isAuthor && (
           <Button
             variant="outlined"
-            startIcon={<EditOutlined />}
+            startIcon={<EditIcon />}
             color="secondary"
             component={Link}
             to={`/editor/${article.slug}`}
@@ -68,12 +64,7 @@ const ArticleActions = ({
           </Button>
         )}
         {isAuthor && (
-          <Button
-            variant="outlined"
-            startIcon={<DeleteOutlined />}
-            color="error"
-            onClick={onDelete}
-          >
+          <Button variant="outlined" startIcon={<DeleteIcon />} color="error" onClick={onDelete}>
             Delete Article
           </Button>
         )}

@@ -74,28 +74,34 @@ const Settings = () => {
   return (
     <Box>
       <Container maxWidth="sm">
-        <Typography variant="h4" color="primary" align="center" sx={{ p: '1rem' }}>
+        <Typography variant="h5" color="secondary" align="center" sx={{ p: '2rem' }}>
           Your Settings
         </Typography>
         <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
           <TextField
             id="image"
             label="URL of profile picture"
+            variant="filled"
             fullWidth
+            color="secondary"
             value={formData.image}
             onChange={(event) => handleChange(event)}
           />
           <TextField
             id="username"
             label="Your name"
+            variant="filled"
             fullWidth
+            color="secondary"
             value={formData.username}
             onChange={handleChange}
           />
           <TextField
             id="bio"
             label="Short bio about you"
+            variant="filled"
             fullWidth
+            color="secondary"
             multiline
             rows={5}
             value={formData.bio}
@@ -104,14 +110,18 @@ const Settings = () => {
           <TextField
             id="email"
             label="Your Email example@gmail.com"
+            variant="filled"
             fullWidth
+            color="secondary"
             value={formData.email}
             onChange={handleChange}
           />
           <TextField
             id="password"
             label="New Password"
+            variant="filled"
             fullWidth
+            color="secondary"
             type="password"
             value={formData.password}
             onChange={handleChange}

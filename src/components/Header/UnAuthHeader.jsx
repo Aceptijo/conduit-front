@@ -10,7 +10,7 @@ const UnAuthHeader = () => {
     },
   }));
   return (
-    <AppBar position="static" sx={{ bgcolor: 'primary.dark' }}>
+    <AppBar position="static" color="transparent" sx={{ boxShadow: 'none' }}>
       <Container maxWidth="lg">
         <Toolbar>
           <Typography
@@ -37,7 +37,7 @@ const UnAuthHeader = () => {
               to="/login"
               sx={{ textTransform: 'none' }}
             >
-              Log in
+              Sign In
             </StyledButton>
             <StyledButton
               color="secondary"
@@ -45,7 +45,7 @@ const UnAuthHeader = () => {
               to="/register"
               sx={{ textTransform: 'none' }}
             >
-              Register
+              Sign Up
             </StyledButton>
           </Box>
         </Toolbar>

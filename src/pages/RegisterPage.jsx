@@ -43,6 +43,7 @@ const RegisterPage = () => {
           bgcolor: 'secondary.dark',
           p: '1rem 0',
           mt: '10rem',
+          borderRadius: '4px',
         }}
       >
         <Typography variant="h4" color="secondary" sx={{ p: '1rem 0' }}>

@@ -3,13 +3,19 @@ import { addComment, deleteComment, getComments } from '../../../api/articles.js
 import useAuthStore from '../../../store/authStore.js';
 import { Link } from 'react-router-dom';
 import { Avatar, Box, Button, TextField, Typography } from '@mui/material';
-import { DeleteOutlined } from '@mui/icons-material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { useForm } from 'react-hook-form';
 
 const CommentsSection = ({ slug }) => {
   const { user } = useAuthStore();
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -56,15 +62,20 @@ const CommentsSection = ({ slug }) => {
         sx={{ ml: '16.6%', display: 'flex', flexDirection: 'column', gap: '10px' }}
       >
         {user ? (
-          <Box component="form" sx={{ padding: '1rem', bgcolor: 'secondary.dark' }}>
+          <Box
+            component="form"
+            sx={{ padding: '1rem', bgcolor: 'secondary.dark', borderRadius: '4px' }}
+          >
             <TextField
               id="outlined-basic"
+              variant="filled"
               value={newComment}
               onChange={(event) => setNewComment(event.target.value)}
               multiline
               rows={3}
               label="Write a comment"
               fullWidth
+              color="secondary"
             />
             <Box
               sx={{
@@ -74,7 +85,9 @@ const CommentsSection = ({ slug }) => {
               }}
             >
               <Avatar src={user.image || 'broken-image.jpg'} />
-              <Button onClick={handleAddComment}>Post comment</Button>
+              <Button onClick={handleAddComment} variant="contained">
+                Post comment
+              </Button>
             </Box>
           </Box>
         ) : (
@@ -107,7 +120,7 @@ const CommentsSection = ({ slug }) => {
         )}
         {comments.length > 0 ? (
           comments.map((comment, index) => (
-            <Box sx={{ width: '100%', bgcolor: 'secondary.dark' }} key={index}>
+            <Box sx={{ width: '100%', bgcolor: 'secondary.dark', borderRadius: '4px' }} key={index}>
               <Typography
                 variant="body1"
                 noWrap={false}
@@ -118,8 +131,8 @@ const CommentsSection = ({ slug }) => {
               </Typography>
               <Box
                 sx={{
-                  bgcolor: 'secondary.main',
-                  padding: '0.5rem 1rem',
+                  bgcolor: 'secondary.dark',
+                  padding: '1rem 1rem',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '10px',
@@ -150,7 +163,7 @@ const CommentsSection = ({ slug }) => {
                   <Button
                     variant="outlined"
                     onClick={() => handleDeleteComment(comment.id)}
-                    startIcon={<DeleteOutlined />}
+                    startIcon={<DeleteIcon />}
                     color="error"
                     sx={{ ml: 'auto' }}
                   >

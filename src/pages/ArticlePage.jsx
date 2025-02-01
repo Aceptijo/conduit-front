@@ -103,8 +103,8 @@ const ArticlePage = () => {
         }}
       >
         <Container maxWidth="lg">
-          <Typography variant="h3" color="secondary" sx={{ mb: '2rem' }}>
-            {article.title}
+          <Typography variant="h3" color="secondary" sx={{ mb: '2rem', wordWrap: 'break-word' }}>
+            {article?.title}
           </Typography>
           <ArticleActions
             article={article}

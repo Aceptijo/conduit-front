@@ -13,12 +13,20 @@ const RegisterForm = ({
   return (
     <Box
       component="form"
-      sx={{ width: '100%', mt: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}
+      sx={{
+        width: '100%',
+        mt: '1rem',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1rem',
+      }}
     >
       <TextField
         label="Username"
         placeholder="nickname"
         fullWidth
+        color="secondary"
+        variant="filled"
         value={username}
         onChange={(event) => onUsernameChange(event.target.value)}
       />
@@ -26,6 +34,8 @@ const RegisterForm = ({
         label="Email"
         placeholder="example@gmail.com"
         fullWidth
+        color="secondary"
+        variant="filled"
         value={email}
         onChange={(event) => onEmailChange(event.target.value)}
       />
@@ -33,6 +43,8 @@ const RegisterForm = ({
         label="Password"
         placeholder="****"
         fullWidth
+        color="secondary"
+        variant="filled"
         value={password}
         onChange={(event) => onPasswordChange(event.target.value)}
       />

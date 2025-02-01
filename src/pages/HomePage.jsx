@@ -64,7 +64,7 @@ const HomePage = () => {
       <Box
         sx={{
           padding: '2rem',
-          bgcolor: 'primary.main',
+          bgcolor: 'secondary.dark',
           position: 'absolute',
           top: '0',
           left: '0',
@@ -84,10 +84,10 @@ const HomePage = () => {
             alignItems: 'center',
           }}
         >
-          <Typography variant="h2" component="h1" sx={{ pb: '0.5rem', fontWeight: 'bold' }}>
+          <Typography variant="h3" component="h1" color="primary" sx={{ pb: '0.5rem' }}>
             conduit
           </Typography>
-          <Typography variant="h5" component="p">
+          <Typography variant="h5" component="p" color="primary">
             A place to share your knowledge.
           </Typography>
         </Box>
@@ -168,8 +168,9 @@ const HomePage = () => {
                     label={tagItem}
                     key={tagItem}
                     size="small"
-                    color="secondary"
+                    color="secondary.dark"
                     onClick={() => handleTagClick(tagItem)}
+                    sx={{ color: 'secondary.light' }}
                     clickable
                   />
                 ))}

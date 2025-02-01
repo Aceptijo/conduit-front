@@ -1,7 +1,11 @@
 import useAuthStore from '../../store/authStore.js';
-import { AppBar, Avatar, Box, Button, Container, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Button, Container, Toolbar, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { styled } from '@mui/system';
+import HomeIcon from '@mui/icons-material/Home';
+import EditIcon from '@mui/icons-material/Edit';
+import SettingsIcon from '@mui/icons-material/Settings';
+import PersonIcon from '@mui/icons-material/Person';
 
 const AuthHeader = () => {
   const { user } = useAuthStore();
@@ -9,12 +13,11 @@ const AuthHeader = () => {
   const StyledButton = styled(Button)(({ theme }) => ({
     '&.active': {
       color: theme.palette.primary.main,
-      fontWeight: 'bold',
     },
   }));
 
   return (
-    <AppBar position="static" sx={{ bgcolor: 'primary.dark' }}>
+    <AppBar position="static" color="transparent" sx={{ boxShadow: 'none' }}>
       <Container maxWidth="lg">
         <Toolbar>
           <Typography
@@ -22,7 +25,7 @@ const AuthHeader = () => {
             variant="h5"
             component="a"
             href="/"
-            sx={{ textTransform: 'none', textDecoration: 'none', fontWeight: 'bold' }}
+            sx={{ textTransform: 'none', textDecoration: 'none' }}
           >
             conduit
           </Typography>
@@ -32,6 +35,7 @@ const AuthHeader = () => {
               component={NavLink}
               to="/"
               sx={{ textTransform: 'none' }}
+              startIcon={<HomeIcon />}
             >
               Home
             </StyledButton>
@@ -40,6 +44,7 @@ const AuthHeader = () => {
               component={NavLink}
               to="/editor"
               sx={{ textTransform: 'none' }}
+              startIcon={<EditIcon />}
             >
               New Article
             </StyledButton>
@@ -48,6 +53,7 @@ const AuthHeader = () => {
               component={NavLink}
               to="/settings"
               sx={{ textTransform: 'none' }}
+              startIcon={<SettingsIcon />}
             >
               Settings
             </StyledButton>
@@ -56,8 +62,8 @@ const AuthHeader = () => {
               component={NavLink}
               to={`/profile/${user.username}`}
               sx={{ textTransform: 'none' }}
+              startIcon={<PersonIcon />}
             >
-              <Avatar src={`${user.image}`} sx={{ width: 36, height: 36, mr: 1 }} />
               <Typography>{user.username}</Typography>
             </StyledButton>
           </Box>
