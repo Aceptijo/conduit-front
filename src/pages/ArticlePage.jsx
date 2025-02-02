@@ -27,7 +27,6 @@ const ArticlePage = () => {
         setIsFavorited(response.favorited);
         setIsFollowing(response.author.following);
         setIsLoading(false);
-        console.log('фетч в артикл пейдже', response.tagList);
       } catch (err) {
         console.error('Не удалось получить данные о статье: ', err);
       } finally {

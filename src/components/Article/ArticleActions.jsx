@@ -17,20 +17,20 @@ const ArticleActions = ({
   return (
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <Typography component={Link} to={`/profile/${article.author.username}`}>
-          <Avatar src={article.author.image || 'broken-image.jpg'} />
+        <Typography component={Link} to={`/profile/${article?.author.username}`}>
+          <Avatar src={article?.author.image || 'broken-image.jpg'} />
         </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Typography
             component={Link}
-            to={`/profile/${article.author.username}`}
+            to={`/profile/${article?.author.username}`}
             color="primary"
             sx={{ textDecoration: 'none' }}
           >
-            {article.author.username}
+            {article?.author.username}
           </Typography>
           <Typography component="span" variant="caption" color="secondary">
-            {new Date(article.createdAt).toLocaleDateString()}
+            {new Date(article?.createdAt).toLocaleDateString()}
           </Typography>
         </Box>
         {!isAuthor && (
@@ -41,8 +41,8 @@ const ArticleActions = ({
             color="secondary"
           >
             {isFollowing
-              ? `Unfollow ${article.author.username}`
-              : `Follow ${article.author.username}`}
+              ? `Unfollow ${article?.author.username}`
+              : `Follow ${article?.author.username}`}
           </Button>
         )}
         <Button

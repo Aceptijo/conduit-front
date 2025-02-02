@@ -15,6 +15,9 @@ const theme = createTheme({
       contrastText: '#2c2e31',
     },
   },
+  error: {
+    main: '#dc3545',
+  },
   typography: {
     fontFamily: '"Roboto Mono", monospace ',
     fontWeightBold: '400',

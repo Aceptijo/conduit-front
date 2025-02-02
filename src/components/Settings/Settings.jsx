@@ -74,7 +74,7 @@ const Settings = () => {
   return (
     <Box>
       <Container maxWidth="sm">
-        <Typography variant="h5" color="secondary" align="center" sx={{ p: '2rem' }}>
+        <Typography variant="h5" color="secondary" align="center" sx={{ p: '3rem' }}>
           Your Settings
         </Typography>
         <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
