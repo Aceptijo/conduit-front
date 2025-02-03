@@ -5,7 +5,7 @@ import ArticleContent from '../components/Article/ArticleContent.jsx';
 import useAuthStore from '../store/authStore.js';
 import { followUser, unfollowUser } from '../api/user.js';
 import CommentsSection from '../components/Article/Comments/CommentsSection.jsx';
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container, LinearProgress, Typography } from '@mui/material';
 import ArticleActions from '../components/Article/ArticleActions.jsx';
 
 const ArticlePage = () => {
@@ -13,7 +13,7 @@ const ArticlePage = () => {
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const [article, setArticle] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
 
@@ -21,6 +21,7 @@ const ArticlePage = () => {
 
   useEffect(() => {
     const fetchArticle = async () => {
+      setIsLoading(true);
       try {
         const response = await getArticle(slug);
         setArticle(response);
@@ -89,38 +90,44 @@ const ArticlePage = () => {
     }
   };
 
-  if (isLoading) {
-    return <div>Загрузка...</div>;
-  }
-
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-      <Box
-        sx={{
-          p: '2rem 0',
-          bgcolor: 'secondary.dark',
-        }}
-      >
-        <Container maxWidth="lg">
-          <Typography variant="h3" color="secondary" sx={{ mb: '2rem', wordWrap: 'break-word' }}>
-            {article?.title}
-          </Typography>
-          <ArticleActions
-            article={article}
-            onFavorite={handleFavorite}
-            isFavorited={isFavorited}
-            onDelete={handleDelete}
-            isAuthor={isAuthor}
-            isFollowing={isFollowing}
-            onFollow={handleFollow}
-          />
-        </Container>
-      </Box>
-      <Container maxWidth="lg" sx={{ mt: '2rem' }}>
-        <ArticleContent article={article} />
-        <hr />
-        <CommentsSection slug={slug} />
-      </Container>
+      {isLoading ? (
+        <LinearProgress />
+      ) : (
+        <Box>
+          <Box
+            sx={{
+              p: '2rem 0',
+              bgcolor: 'secondary.dark',
+            }}
+          >
+            <Container maxWidth="lg">
+              <Typography
+                variant="h3"
+                color="secondary"
+                sx={{ mb: '2rem', wordWrap: 'break-word' }}
+              >
+                {article?.title}
+              </Typography>
+              <ArticleActions
+                article={article}
+                onFavorite={handleFavorite}
+                isFavorited={isFavorited}
+                onDelete={handleDelete}
+                isAuthor={isAuthor}
+                isFollowing={isFollowing}
+                onFollow={handleFollow}
+              />
+            </Container>
+          </Box>
+          <Container maxWidth="lg" sx={{ mt: '2rem' }}>
+            <ArticleContent article={article} />
+            <hr />
+            <CommentsSection slug={slug} />
+          </Container>
+        </Box>
+      )}
     </Box>
   );
 };

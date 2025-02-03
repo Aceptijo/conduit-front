@@ -18,36 +18,42 @@ import {
 const HomePage = () => {
   const { articles, totalPages, fetchGlobalArticles, fetchArticlesByTag, isLoading } =
     useArticlesStore();
-  const { tags, isLoadingTags, fetchTags } = useTagsStore();
-  const [activeTab, setActiveTab] = useState('global');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [articlePerPage] = useState(4);
-  const navigate = useNavigate();
   const location = useLocation();
+  const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
-  const urlTag = queryParams.get('tag');
+  const tagFromUrl = queryParams.get('tag');
+  const tabFromUrl = queryParams.get('feed') || 'global';
+  const pageFromUrl = parseInt(queryParams.get('page'), 10) || 1;
+  const { tags, isLoadingTags, fetchTags } = useTagsStore();
+  const [activeTab, setActiveTab] = useState(tabFromUrl);
+  const [currentPage, setCurrentPage] = useState(pageFromUrl);
+  const [articlePerPage] = useState(4);
 
   useEffect(() => {
-    if (urlTag) {
+    setActiveTab(tabFromUrl);
+  }, [tabFromUrl]);
+
+  useEffect(() => {
+    if (tagFromUrl) {
       setActiveTab('tag');
       const offset = currentPage - 1;
-      fetchArticlesByTag(urlTag, articlePerPage, offset);
+      fetchArticlesByTag(tagFromUrl, articlePerPage, offset);
     }
-  }, [urlTag]);
+  }, [tagFromUrl, currentPage]);
 
   useEffect(() => {
     fetchTags();
   }, [fetchTags]);
 
   useEffect(() => {
-    if (activeTab === 'global' || activeTab === 'feed') {
+    if (activeTab === 'global' || activeTab === 'your') {
       const offset = currentPage - 1;
       fetchGlobalArticles(activeTab, articlePerPage, offset);
     }
   }, [activeTab, currentPage]);
 
   const handleTagClick = (selectedTag) => {
-    navigate(`/?tag=${selectedTag}`);
+    navigate(`/?feed=tag&tag=${selectedTag}`);
   };
 
   const handlePageChange = (event, page) => {
@@ -93,22 +99,29 @@ const HomePage = () => {
         </Box>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: '12.5rem' }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: '72%' }}>
           <Tabs
             value={activeTab}
             onChange={handleTabChange}
             textColor="primary"
             indicatorColor="primary"
           >
-            <Tab value="global" label="Global Feed" component={Link} to={`/?global=feed`} />
-            <Tab value="feed" label="Your Feed" component={Link} to={`/?your=feed`} />
-            {urlTag && <Tab value="tag" label={urlTag} component={Link} to={`/?tag=${urlTag}`} />}
+            <Tab value="global" label="Global Feed" component={Link} to={`/?feed=global`} />
+            <Tab value="your" label="Your Feed" component={Link} to={`/?feed=your`} />
+            {tagFromUrl && (
+              <Tab
+                value="tag"
+                label={tagFromUrl}
+                component={Link}
+                to={`/?feed=tag&tag=${tagFromUrl}`}
+              />
+            )}
           </Tabs>
           {isLoading
             ? Array.from({ length: 4 }).map((_, index) => (
                 <Skeleton
                   variant="rounded"
-                  height={210}
+                  height={212}
                   key={index}
                   animation="wave"
                   sx={{ bgcolor: 'secondary', mb: '1rem' }}
@@ -126,7 +139,11 @@ const HomePage = () => {
             renderItem={(item) => (
               <PaginationItem
                 component={Link}
-                to={`/?${activeTab}=feed/${item.page === 1 ? '' : `&page=${item.page}`}`}
+                to={
+                  tagFromUrl
+                    ? `/?feed=${activeTab}&tag=${tagFromUrl}&${item.page === 1 ? '' : `page=${item.page}`}`
+                    : `/?feed=${activeTab}&${item.page === 1 ? '' : `page=${item.page}`}`
+                }
                 {...item}
               />
             )}
@@ -164,7 +181,7 @@ const HomePage = () => {
               : tags.map((tagItem) => (
                   <Chip
                     component={Link}
-                    to={`/?tag=${tagItem}`}
+                    to={`/?feed=tag&tag=${tagItem}`}
                     label={tagItem}
                     key={tagItem}
                     size="small"

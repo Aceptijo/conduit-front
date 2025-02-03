@@ -19,3 +19,8 @@ footer {
    width: 100%;
 }
 
+hr {
+   border-color: #646669;
+   border-bottom: none;
+}
+

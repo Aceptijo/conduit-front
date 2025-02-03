@@ -81,10 +81,10 @@ const AddArticlePage = () => {
       };
 
       if (slug) {
-        await axiosInstance.put(`/articles/${slug}`, {
+        const response = await axiosInstance.put(`/articles/${slug}`, {
           article: articleData,
         });
-        navigate(`/article/${data.title}`);
+        navigate(`/article/${response.data.article.slug}`);
       } else {
         await axiosInstance.post('/articles', {
           article: articleData,
@@ -216,7 +216,7 @@ const AddArticlePage = () => {
             })}
           />
           <TextField
-            label="Enter tags"
+            label="Enter tags (press Enter to add)"
             variant="filled"
             fullWidth
             color="secondary"

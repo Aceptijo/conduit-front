@@ -53,8 +53,6 @@ const CommentsSection = ({ slug }) => {
     }
   };
 
-  if (isLoading) return <div>Загрузка комментариев...</div>;
-
   return (
     <Box>
       <Box
@@ -136,6 +134,7 @@ const CommentsSection = ({ slug }) => {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '10px',
+                  borderRadius: '4px',
                 }}
               >
                 <Avatar
