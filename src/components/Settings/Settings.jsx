@@ -40,18 +40,29 @@ const Settings = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const updatedData = {};
+    const updatedData = {
+      username: formData.username || user?.username || '',
+      email: formData.email || user?.email || '',
+      bio: formData.bio || user?.bio || '',
+      image: formData.image || user?.image || '',
+      password: formData.password || user?.password || '',
+    };
 
-    updatedData.username = formData.username ?? '';
-    updatedData.email = formData.email ?? '';
-    updatedData.password = formData.password ?? '';
-    updatedData.bio = formData.bio ?? '';
-    updatedData.image = formData.image ?? '';
+    console.log(formData.password);
+    console.log('user password', user?.password);
+
+    // updatedData.username = formData.username ?? '';
+    // updatedData.email = formData.email ?? '';
+    // updatedData.password = formData.password || '';
+    // updatedData.bio = formData.bio ?? '';
+    // updatedData.image = formData.image ?? '';
 
     try {
+      console.log(updatedData);
       const response = await axiosInstance.put('/user', {
         user: updatedData,
       });
+      console.log(response);
       const updatedUser = response.data.user;
       setUser(updatedUser, token);
       navigate(`/profile/${updatedUser.username}`);

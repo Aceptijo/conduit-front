@@ -33,7 +33,6 @@ const AddArticlePage = () => {
     reset,
     getValues,
     setValue,
-    values,
     formState: { errors, isValid },
   } = useForm({
     mode: 'onChange',
@@ -160,8 +159,6 @@ const AddArticlePage = () => {
             variant="filled"
             fullWidth
             color="secondary"
-            defaultValue={''}
-            value={values}
             helperText={errors?.title?.message}
             {...register('title', {
               required: 'Title is required',
@@ -282,7 +279,6 @@ const AddArticlePage = () => {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={snack.error}
         onClose={handleClose}
-        key={snack.name}
         autoHideDuration={3000}
         sx={{ mt: '2rem' }}
       >

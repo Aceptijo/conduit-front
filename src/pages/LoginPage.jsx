@@ -3,7 +3,7 @@ import { useState } from 'react';
 import useAuthStore from '../store/authStore.js';
 import LoginForm from '../components/LoginForm/LoginForm.jsx';
 import { loginUser } from '../api/auth.js';
-import { Alert, Box, Container, Typography } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -18,15 +18,15 @@ const LoginPage = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    setError(null);
     setLoading(true);
     try {
       const data = await loginUser(email, password);
+      console.log(data);
       setUser(data.user, data.user.token);
       navigate('/');
-    } catch (error) {
-      setError(error.errors);
-      console.error('Ошибка авторизации', error);
+    } catch (err) {
+      setError(err.errors.body);
+      console.error('Ошибка авторизации', err);
     } finally {
       setLoading(false);
     }
@@ -61,11 +61,7 @@ const LoginPage = () => {
         >
           Need an account?
         </Typography>
-        {error && (
-          <Alert variant="filled" severity="error">
-            {error}
-          </Alert>
-        )}
+
         <LoginForm
           email={email}
           password={password}
@@ -73,6 +69,8 @@ const LoginPage = () => {
           onPasswordChange={setPassword}
           handleLogin={handleLogin}
           loading={loading}
+          error={error}
+          setError={setError}
         />
       </Container>
     </Box>

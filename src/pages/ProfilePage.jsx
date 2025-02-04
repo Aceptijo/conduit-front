@@ -17,10 +17,12 @@ import {
   Typography,
 } from '@mui/material';
 import { AddOutlined, RemoveOutlined, Settings } from '@mui/icons-material';
+import useSnackbarStore from '../store/snackbarStore.js';
 
 const ProfilePage = () => {
   const { user } = useAuthStore();
-  const { profile, fetchProfile, followUser, unfollowUser, setProfile } = useProfileStore();
+  const { showSnackbar } = useSnackbarStore();
+  const { profile, fetchProfile, followUser, unfollowUser, setProfile, error } = useProfileStore();
   const { articles, fetchArticles, articlesCount, isLoading } = useArticlesStore();
   const { username } = useParams();
   const [activeTab, setActiveTab] = useState('author');
@@ -29,7 +31,7 @@ const ProfilePage = () => {
   const totalPages = Math.ceil(articlesCount / articlesPerPage);
 
   useEffect(() => {
-    if (user.username === username) {
+    if (user?.username === username) {
       setProfile(user);
     } else {
       fetchProfile(username);
@@ -37,6 +39,12 @@ const ProfilePage = () => {
     const offset = currentPage - 1;
     fetchArticles(username, activeTab, offset, articlesPerPage);
   }, [username, activeTab, fetchProfile, currentPage, setProfile, user]);
+
+  useEffect(() => {
+    if (error) {
+      showSnackbar(error, 'error');
+    }
+  }, [error]);
 
   const handleFollow = async () => {
     profile.following ? unfollowUser(username) : followUser(username);
@@ -65,7 +73,7 @@ const ProfilePage = () => {
           <Typography variant="h4" color="primary" sx={{ mt: '1rem' }}>
             {profile?.username}
           </Typography>
-          <Typography color="secondary">{profile?.bio || 'Описание отсутствует'}</Typography>
+          <Typography color="secondary">{profile?.bio || 'Description is missing'}</Typography>
           {user && user?.username === profile?.username ? (
             <Button
               variant="outlined"
@@ -100,13 +108,13 @@ const ProfilePage = () => {
             value="author"
             label="My Articles"
             component={Link}
-            to={`/profile/${profile?.username}?author=feed`}
+            to={`/profile/${profile?.username}/?feed=author`}
           />
           <Tab
             value="favorited"
             label="Favorited Articles"
             component={Link}
-            to={`/profile/${profile?.username}?favorite=feed`}
+            to={`/profile/${profile?.username}/?feed=favorited`}
           />
         </Tabs>
         {isLoading ? (
@@ -125,7 +133,7 @@ const ProfilePage = () => {
           renderItem={(item) => (
             <PaginationItem
               component={Link}
-              to={`/profile/${profile?.username}?${activeTab}=feed${item.page === 1 ? '' : `&page=${item.page}`}`}
+              to={`/profile/${profile?.username}/?feed=${activeTab}${item.page === 1 ? '' : `&page=${item.page}`}`}
               {...item}
             />
           )}

@@ -5,6 +5,7 @@ import UnAuthHeader from './components/Header/UnAuthHeader.jsx';
 import useAuthStore from './store/authStore.js';
 import AuthHeader from './components/Header/AuthHeader.jsx';
 import { useEffect } from 'react';
+import GlobalSnackbar from './components/GlobalSnackbar/GlobalSnackbar.jsx';
 
 function App() {
   const { user, isLoading, restoreSession } = useAuthStore();
@@ -20,6 +21,7 @@ function App() {
   return (
     <div className="App">
       <>
+        <GlobalSnackbar />
         {user ? <AuthHeader /> : <UnAuthHeader />}
         <AppRouter />
         <Footer />

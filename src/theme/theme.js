@@ -54,6 +54,11 @@ const theme = createTheme({
           '& .MuiInputLabel-root': {
             color: '#646669',
           },
+          '& input:-webkit-autofill': {
+            WebkitBoxShadow: '0 0 0 100px #2c2e31 inset',
+            WebkitTextFillColor: '#d1d0c5', // цвет текста
+            transition: 'background-color 5000s ease-in-out 0s',
+          },
         },
       },
     },

@@ -7,6 +7,7 @@ import { followUser, unfollowUser } from '../api/user.js';
 import CommentsSection from '../components/Article/Comments/CommentsSection.jsx';
 import { Box, Container, LinearProgress, Typography } from '@mui/material';
 import ArticleActions from '../components/Article/ArticleActions.jsx';
+import useSnackbarStore from '../store/snackbarStore.js';
 
 const ArticlePage = () => {
   const { slug } = useParams();
@@ -16,8 +17,15 @@ const ArticlePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [error, setError] = useState(null);
+  const { showSnackbar } = useSnackbarStore();
 
   const isAuthor = user && user.username === article?.author?.username;
+  useEffect(() => {
+    if (error) {
+      showSnackbar(error, 'error');
+    }
+  }, [error]);
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -49,6 +57,7 @@ const ArticlePage = () => {
         setIsFavorited(true);
       }
     } catch (err) {
+      setError(err.response.data.errors.body);
       console.error('Не удалось обновить избранное: ', err);
     }
   };
@@ -77,6 +86,7 @@ const ArticlePage = () => {
         }));
       }
     } catch (err) {
+      setError(err.response.data.errors.body);
       console.error('Не удалось обновить подписку: ', err);
     }
   };

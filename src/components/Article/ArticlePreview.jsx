@@ -4,9 +4,19 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import useArticlesStore from '../../store/articlesStore.js';
 import { Avatar, Box, Button, Card, CardContent, Chip, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
+import { useEffect, useState } from 'react';
+import useSnackbarStore from '../../store/snackbarStore.js';
 
 const ArticlePreview = ({ article, handleTagClick }) => {
   const { favoriteToggle } = useArticlesStore();
+  const [error, setError] = useState(null);
+  const { showSnackbar } = useSnackbarStore();
+
+  useEffect(() => {
+    if (error) {
+      showSnackbar(error, 'error');
+    }
+  }, [error]);
 
   const handleFavorite = async () => {
     try {
@@ -16,6 +26,7 @@ const ArticlePreview = ({ article, handleTagClick }) => {
 
       favoriteToggle(updatedArticle);
     } catch (err) {
+      setError(err.response.data.errors.body);
       console.error('Не удалось изменить список избранных: ', err);
     }
   };

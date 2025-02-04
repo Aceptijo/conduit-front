@@ -3,7 +3,7 @@ import RegisterForm from '../components/RegisterForm/RegisterForm.jsx';
 import useAuthStore from '../store/authStore.js';
 import { registerUser } from '../api/auth.js';
 import { Link, useNavigate } from 'react-router-dom';
-import { Alert, Box, Container, Typography } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
@@ -24,9 +24,9 @@ const RegisterPage = () => {
       const data = await registerUser(username, email, password);
       setUser(data.user, data.user.token);
       navigate('/');
-    } catch (error) {
-      setError(error.errors);
-      console.error('Ошибка регистрации', error);
+    } catch (err) {
+      setError(err.errors.body);
+      console.error('Ошибка регистрации', err);
     } finally {
       setLoading(false);
     }
@@ -61,11 +61,7 @@ const RegisterPage = () => {
         >
           Have an account?
         </Typography>
-        {error && (
-          <Alert variant="filled" severity="error">
-            {error}
-          </Alert>
-        )}
+
         <RegisterForm
           username={username}
           email={email}
@@ -75,6 +71,8 @@ const RegisterPage = () => {
           onPasswordChange={setPassword}
           onUsernameChange={setUsername}
           loading={loading}
+          error={error}
+          setError={setError}
         />
       </Container>
     </Box>

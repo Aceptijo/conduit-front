@@ -14,10 +14,12 @@ import {
   Tabs,
   Typography,
 } from '@mui/material';
+import useAuthStore from '../store/authStore.js';
 
 const HomePage = () => {
   const { articles, totalPages, fetchGlobalArticles, fetchArticlesByTag, isLoading } =
     useArticlesStore();
+  const { user } = useAuthStore();
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
@@ -107,7 +109,7 @@ const HomePage = () => {
             indicatorColor="primary"
           >
             <Tab value="global" label="Global Feed" component={Link} to={`/?feed=global`} />
-            <Tab value="your" label="Your Feed" component={Link} to={`/?feed=your`} />
+            {user && <Tab value="your" label="Your Feed" component={Link} to={`/?feed=your`} />}
             {tagFromUrl && (
               <Tab
                 value="tag"
@@ -130,6 +132,7 @@ const HomePage = () => {
             : articles?.map((article, index) => (
                 <ArticlePreview article={article} handleTagClick={handleTagClick} key={index} />
               ))}
+
           <Pagination
             page={currentPage}
             count={totalPages}
@@ -141,8 +144,8 @@ const HomePage = () => {
                 component={Link}
                 to={
                   tagFromUrl
-                    ? `/?feed=${activeTab}&tag=${tagFromUrl}&${item.page === 1 ? '' : `page=${item.page}`}`
-                    : `/?feed=${activeTab}&${item.page === 1 ? '' : `page=${item.page}`}`
+                    ? `/?feed=${activeTab}&tag=${tagFromUrl}${item.page === 1 ? '' : `&page=${item.page}`}`
+                    : `/?feed=${activeTab}${item.page === 1 ? '' : `&page=${item.page}`}`
                 }
                 {...item}
               />
