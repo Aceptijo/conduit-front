@@ -6,9 +6,15 @@ import useAuthStore from './store/authStore.js';
 import AuthHeader from './components/Header/AuthHeader.jsx';
 import { useEffect } from 'react';
 import GlobalSnackbar from './components/GlobalSnackbar/GlobalSnackbar.jsx';
+import { Box, ThemeProvider } from '@mui/material';
+import useThemeStore from './store/themeStore.js';
+import darkTheme from './theme/darkTheme.js';
+import lightTheme from './theme/lightTheme.js';
 
 function App() {
   const { user, isLoading, restoreSession } = useAuthStore();
+  const { themeMode } = useThemeStore();
+  const currentTheme = themeMode === 'dark' ? darkTheme : lightTheme;
 
   useEffect(() => {
     restoreSession();
@@ -19,14 +25,14 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <>
+    <ThemeProvider theme={currentTheme}>
+      <Box sx={{ bgcolor: 'background.default', pb: '100px', minHeight: '100vh' }}>
         <GlobalSnackbar />
         {user ? <AuthHeader /> : <UnAuthHeader />}
         <AppRouter />
         <Footer />
-      </>
-    </div>
+      </Box>
+    </ThemeProvider>
   );
 }
 

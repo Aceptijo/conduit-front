@@ -1,22 +1,25 @@
 import { createTheme } from '@mui/material';
 
-const theme = createTheme({
+const lightTheme = createTheme({
   palette: {
     primary: {
-      main: '#e2b714',
-      light: '#d1d0c5',
-      dark: '#d1d0c5',
-      contrastText: '#2c2e31',
+      main: '#444444',
+      light: '#444444',
+      dark: '#444444',
+      contrastText: '#dddddd',
     },
     secondary: {
-      main: '#d1d0c5',
-      dark: '#2c2e31',
-      light: '#646669',
-      contrastText: '#2c2e31',
+      main: '#444444',
+      dark: '#dddddd',
+      light: '#b2b2b2',
+      contrastText: '#dddddd',
+    },
+    background: {
+      default: '#eeeeee',
     },
   },
   error: {
-    main: '#dc3545',
+    main: '#d70000',
   },
   typography: {
     fontFamily: '"Roboto Mono", monospace ',
@@ -30,7 +33,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           '&:hover': {
-            color: '#d1d0c5',
+            color: '#444444',
           },
         },
       },
@@ -39,24 +42,24 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           '& .MuiFilledInput-root': {
-            backgroundColor: '#2c2e31',
+            backgroundColor: '#dddddd',
             '&:hover': {
-              backgroundColor: '#2c2e31',
+              backgroundColor: '#dddddd',
             },
             '&.Mui-focused': {
-              backgroundColor: '#2c2e31',
+              backgroundColor: '#dddddd',
             },
             '& .MuiInputBase-input': {
-              color: '#d1d0c5',
-              caretColor: '#e2b714',
+              color: '#444444',
+              caretColor: '#444444',
             },
           },
           '& .MuiInputLabel-root': {
-            color: '#646669',
+            color: '#b2b2b2',
           },
           '& input:-webkit-autofill': {
-            WebkitBoxShadow: '0 0 0 100px #2c2e31 inset',
-            WebkitTextFillColor: '#d1d0c5', // цвет текста
+            WebkitBoxShadow: '0 0 0 100px #dddddd inset',
+            WebkitTextFillColor: '#444444',
             transition: 'background-color 5000s ease-in-out 0s',
           },
         },
@@ -72,19 +75,18 @@ const theme = createTheme({
     MuiPaginationItem: {
       styleOverrides: {
         root: {
-          color: '#d1d0c5',
+          color: '#444444',
           '&:hover': {
-            backgroundColor: '#2c2e31',
+            backgroundColor: '#dddddd',
           },
         },
       },
     },
   },
 });
-// bg: #323437
-// main yellow: #e2b714
-// text color: #d1d0c5
-// sub text color: #646669
-// bg dark: #2c2e31
-
-export default theme;
+// bg: #eeeeee;
+// main: #444444;
+// text color: #444444;
+// sub text color: #b2b2b2;
+// bg dark: #dddddd;
+export default lightTheme;

@@ -2,7 +2,7 @@ import { Box, Container, Typography } from '@mui/material';
 
 const Footer = () => {
   return (
-    <Box component="footer" color="primary" sx={{ bgcolor: 'transparent' }}>
+    <Box component="footer" color="primary" sx={{ bgcolor: 'background.default', mt: '100px' }}>
       <Container maxWidth="lg" sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
         <Typography
           variant="caption"

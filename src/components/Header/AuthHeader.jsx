@@ -1,14 +1,18 @@
 import useAuthStore from '../../store/authStore.js';
-import { AppBar, Box, Button, Container, Toolbar, Typography } from '@mui/material';
-import { NavLink } from 'react-router-dom';
+import { AppBar, Box, Button, Container, IconButton, Toolbar, Typography } from '@mui/material';
+import { Link, NavLink } from 'react-router-dom';
 import { styled } from '@mui/system';
 import HomeIcon from '@mui/icons-material/Home';
 import EditIcon from '@mui/icons-material/Edit';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PersonIcon from '@mui/icons-material/Person';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import useThemeStore from '../../store/themeStore.js';
+import Brightness3Icon from '@mui/icons-material/Brightness3';
 
 const AuthHeader = () => {
   const { user } = useAuthStore();
+  const { setThemeMode, themeMode } = useThemeStore();
 
   const StyledButton = styled(Button)(({ theme }) => ({
     '&.active': {
@@ -23,13 +27,16 @@ const AuthHeader = () => {
           <Typography
             color="primary"
             variant="h5"
-            component="a"
-            href="/"
+            component={Link}
+            to="/"
             sx={{ textTransform: 'none', textDecoration: 'none' }}
           >
             conduit
           </Typography>
           <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
+            <IconButton color="secondary" onClick={() => setThemeMode()}>
+              {themeMode === 'dark' ? <LightModeIcon /> : <Brightness3Icon />}
+            </IconButton>
             <StyledButton
               color="secondary"
               component={NavLink}

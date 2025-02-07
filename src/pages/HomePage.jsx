@@ -56,6 +56,7 @@ const HomePage = () => {
 
   const handleTagClick = (selectedTag) => {
     navigate(`/?feed=tag&tag=${selectedTag}`);
+    setCurrentPage(1);
   };
 
   const handlePageChange = (event, page) => {
@@ -78,7 +79,7 @@ const HomePage = () => {
           left: '0',
           right: '0',
           mt: '4rem',
-          zIndex: -1,
+          zIndex: 1,
           display: 'flex',
           justifyContent: 'center',
         }}

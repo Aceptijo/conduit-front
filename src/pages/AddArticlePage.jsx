@@ -1,23 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  Alert,
-  Box,
-  Button,
-  Chip,
-  Container,
-  LinearProgress,
-  Snackbar,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Chip, Container, LinearProgress, TextField, Typography } from '@mui/material';
 import { useFieldArray, useForm } from 'react-hook-form';
 import axiosInstance from '../utils/axiosInstance.js';
 import { getArticle } from '../api/articles.js';
 import ClearIcon from '@mui/icons-material/Clear';
-import DoneIcon from '@mui/icons-material/Done';
-import ErrorIcon from '@mui/icons-material/Error';
-import { styled } from '@mui/system';
+import useSnackbarStore from '../store/snackbarStore.js';
 
 const AddArticlePage = () => {
   const { slug } = useParams();
@@ -25,7 +13,6 @@ const AddArticlePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [articleData, setArticleData] = useState(null);
   const [error, setError] = useState(null);
-  const [snack, setSnack] = useState({ success: false, error: false });
   const {
     register,
     handleSubmit,
@@ -42,6 +29,7 @@ const AddArticlePage = () => {
     },
   });
   const { fields, remove, append } = useFieldArray({ control, name: 'tags' });
+  const { showSnackbar } = useSnackbarStore();
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -89,22 +77,15 @@ const AddArticlePage = () => {
           article: articleData,
         });
       }
-      setSnack({ ...snack, success: true });
+      showSnackbar('The article has been published', 'success');
       reset();
     } catch (err) {
       console.error('Ошибка при сохранении стьатьи: ', err);
       setError(err.response.data.errors.body);
-      setSnack({ ...snack, error: true });
+      showSnackbar(err.response.data.errors.body, 'error');
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnack({ open: false });
   };
 
   const handleAddTag = () => {
@@ -114,18 +95,6 @@ const AddArticlePage = () => {
       setValue('tagInput', '');
     }
   };
-
-  const ResizableTextField = styled(TextField)({
-    '& .MuiInputBase-root': {
-      resize: 'vertical',
-      overflow: 'auto',
-      minHeight: '194px',
-      boxSizing: 'border-box',
-    },
-    '& textarea': {
-      height: '100% !important',
-    },
-  });
 
   return (
     <Container maxWidth="md">
@@ -191,7 +160,7 @@ const AddArticlePage = () => {
               },
             })}
           />
-          <ResizableTextField
+          <TextField
             label="Write your article (in markdown)"
             variant="filled"
             fullWidth
@@ -200,6 +169,17 @@ const AddArticlePage = () => {
             rows={7}
             error={!!errors.body}
             helperText={errors?.body?.message}
+            sx={{
+              '& .MuiInputBase-root': {
+                resize: 'vertical',
+                overflow: 'auto',
+                minHeight: '194px',
+                boxSizing: 'border-box',
+              },
+              '& textarea': {
+                height: '100% !important',
+              },
+            }}
             {...register('body', {
               required: 'Content is required',
               minLength: {
@@ -260,37 +240,6 @@ const AddArticlePage = () => {
           </Button>
         </Box>
       )}
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={snack.success}
-        onClose={handleClose}
-        autoHideDuration={3000}
-        sx={{ mt: '2rem' }}
-      >
-        <Alert
-          severity="none"
-          icon={<DoneIcon />}
-          sx={{ color: 'secondary.dark', bgcolor: 'primary.main' }}
-        >
-          The article has been published
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={snack.error}
-        onClose={handleClose}
-        autoHideDuration={3000}
-        sx={{ mt: '2rem' }}
-      >
-        <Alert
-          severity="none"
-          icon={<ErrorIcon />}
-          color="secondary"
-          sx={{ bgcolor: 'error.main', color: 'secondary.main' }}
-        >
-          {error}
-        </Alert>
-      </Snackbar>
     </Container>
   );
 };

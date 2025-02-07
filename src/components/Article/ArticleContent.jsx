@@ -31,7 +31,7 @@ const ArticleContent = ({ article }) => {
           '& h2': { color: 'primary.main' },
           '& h3': { color: 'primary.main' },
           '& p': { color: 'secondary.main' },
-          '& strong': { color: 'white' },
+          // '& strong': { color: 'white' },
           '& ul': { color: 'secondary.main' },
           '& li': { color: 'secondary.main' },
           '& code': {
