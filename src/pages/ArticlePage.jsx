@@ -5,7 +5,7 @@ import ArticleContent from '../components/Article/ArticleContent.jsx';
 import useAuthStore from '../store/authStore.js';
 import { followUser, unfollowUser } from '../api/user.js';
 import CommentsSection from '../components/Article/Comments/CommentsSection.jsx';
-import { Box, Container, LinearProgress, Typography } from '@mui/material';
+import { Box, Container, Fade, LinearProgress, Typography } from '@mui/material';
 import ArticleActions from '../components/Article/ArticleActions.jsx';
 import useSnackbarStore from '../store/snackbarStore.js';
 
@@ -105,38 +105,35 @@ const ArticlePage = () => {
       {isLoading ? (
         <LinearProgress />
       ) : (
-        <Box>
-          <Box
-            sx={{
-              p: '2rem 0',
-              bgcolor: 'secondary.dark',
-            }}
-          >
-            <Container maxWidth="lg">
-              <Typography
-                variant="h3"
-                color="secondary"
-                sx={{ mb: '2rem', wordWrap: 'break-word' }}
-              >
-                {article?.title}
-              </Typography>
-              <ArticleActions
-                article={article}
-                onFavorite={handleFavorite}
-                isFavorited={isFavorited}
-                onDelete={handleDelete}
-                isAuthor={isAuthor}
-                isFollowing={isFollowing}
-                onFollow={handleFollow}
-              />
+        <Fade in={!isLoading}>
+          <Box>
+            <Box sx={{ p: '2rem 0', bgcolor: 'secondary.dark' }}>
+              <Container maxWidth="lg">
+                <Typography
+                  variant="h3"
+                  color="secondary"
+                  sx={{ mb: '2rem', wordWrap: 'break-word' }}
+                >
+                  {article?.title}
+                </Typography>
+                <ArticleActions
+                  article={article}
+                  onFavorite={handleFavorite}
+                  isFavorited={isFavorited}
+                  onDelete={handleDelete}
+                  isAuthor={isAuthor}
+                  isFollowing={isFollowing}
+                  onFollow={handleFollow}
+                />
+              </Container>
+            </Box>
+            <Container maxWidth="lg" sx={{ mt: '2rem' }}>
+              <ArticleContent article={article} />
+              <hr />
+              <CommentsSection slug={slug} />
             </Container>
           </Box>
-          <Container maxWidth="lg" sx={{ mt: '2rem' }}>
-            <ArticleContent article={article} />
-            <hr />
-            <CommentsSection slug={slug} />
-          </Container>
-        </Box>
+        </Fade>
       )}
     </Box>
   );

@@ -3,10 +3,10 @@ import { followUser, getUserProfile, unfollowUser } from '../api/user.js';
 
 const useProfileStore = create((set) => ({
   profile: null,
-  isLoading: false,
+  profileIsLoading: false,
   error: null,
   fetchProfile: async (username) => {
-    set({ isLoading: true });
+    set({ profileIsLoading: true });
     try {
       const response = await getUserProfile(username);
       set({ profile: response });
@@ -14,7 +14,7 @@ const useProfileStore = create((set) => ({
       set({ error: err });
       console.error('Не получилось получить данные профиля: ', err);
     } finally {
-      set({ isLoading: false });
+      set({ profileIsLoading: false });
     }
   },
   setProfile: (user) => {

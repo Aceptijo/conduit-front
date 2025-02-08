@@ -10,6 +10,8 @@ import {
   Button,
   CircularProgress,
   Container,
+  Fade,
+  LinearProgress,
   Pagination,
   PaginationItem,
   Tab,
@@ -22,7 +24,8 @@ import useSnackbarStore from '../store/snackbarStore.js';
 const ProfilePage = () => {
   const { user } = useAuthStore();
   const { showSnackbar } = useSnackbarStore();
-  const { profile, fetchProfile, followUser, unfollowUser, setProfile, error } = useProfileStore();
+  const { profile, fetchProfile, followUser, unfollowUser, setProfile, error, profileIsLoading } =
+    useProfileStore();
   const { articles, fetchArticles, articlesCount, isLoading } = useArticlesStore();
   const { username } = useParams();
   const [activeTab, setActiveTab] = useState('author');
@@ -36,9 +39,12 @@ const ProfilePage = () => {
     } else {
       fetchProfile(username);
     }
+  }, [username, fetchProfile, setProfile, user]);
+
+  useEffect(() => {
     const offset = currentPage - 1;
     fetchArticles(username, activeTab, offset, articlesPerPage);
-  }, [username, activeTab, fetchProfile, currentPage, setProfile, user]);
+  }, [activeTab, fetchProfile, currentPage, username]);
 
   useEffect(() => {
     if (error) {
@@ -59,87 +65,93 @@ const ProfilePage = () => {
     setCurrentPage(1);
   };
 
-  return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-      <Box sx={{ p: '2rem 0', bgcolor: 'secondary.dark' }}>
-        <Container
-          maxWidth="lg"
-          sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-        >
-          <Avatar
-            src={profile?.image || 'broken-image.jpg'}
-            sx={{ width: '100px', height: '100px' }}
-          />
-          <Typography variant="h4" color="primary" sx={{ mt: '1rem' }}>
-            {profile?.username}
-          </Typography>
-          <Typography color="secondary">{profile?.bio || 'Description is missing'}</Typography>
-          {user && user?.username === profile?.username ? (
-            <Button
-              variant="outlined"
+  return profileIsLoading ? (
+    <LinearProgress />
+  ) : (
+    <Fade in={!profileIsLoading}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+        <Box sx={{ p: '2rem 0', bgcolor: 'secondary.dark' }}>
+          <Container
+            maxWidth="lg"
+            sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+          >
+            <Avatar
+              src={profile?.image || 'broken-image.jpg'}
+              sx={{ width: '100px', height: '100px' }}
+            />
+            <Typography variant="h4" color="primary" sx={{ mt: '1rem' }}>
+              {profile?.username}
+            </Typography>
+            <Typography color="secondary">{profile?.bio || 'Description is missing'}</Typography>
+            {user && user?.username === profile?.username ? (
+              <Button
+                variant="outlined"
+                component={Link}
+                to={`/settings`}
+                startIcon={<Settings />}
+                color="secondary"
+                sx={{ alignSelf: 'end' }}
+              >
+                Edit Profile Settings
+              </Button>
+            ) : (
+              <Button
+                variant={profile?.following ? 'contained' : 'outlined'}
+                onClick={handleFollow}
+                startIcon={profile?.following ? <RemoveOutlined /> : <AddOutlined />}
+                sx={{ alignSelf: 'end' }}
+              >
+                {profile?.following
+                  ? `Unfollow ${profile?.username}`
+                  : `Follow ${profile?.username}`}
+              </Button>
+            )}
+          </Container>
+        </Box>
+        <Container maxWidth="md" sx={{ mt: '1rem', display: 'flex', flexDirection: 'column' }}>
+          <Tabs
+            value={activeTab}
+            textColor="primary"
+            indicatorColor="primary"
+            onChange={handleTabChange}
+          >
+            <Tab
+              value="author"
+              label="My Articles"
               component={Link}
-              to={`/settings`}
-              startIcon={<Settings />}
-              color="secondary"
-              sx={{ alignSelf: 'end' }}
-            >
-              Edit Profile Settings
-            </Button>
+              to={`/profile/${profile?.username}/?feed=author`}
+            />
+            <Tab
+              value="favorited"
+              label="Favorited Articles"
+              component={Link}
+              to={`/profile/${profile?.username}/?feed=favorited`}
+            />
+          </Tabs>
+          {isLoading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', p: '4rem 0' }}>
+              <CircularProgress size={60} />
+            </Box>
           ) : (
-            <Button
-              variant={profile?.following ? 'contained' : 'outlined'}
-              onClick={handleFollow}
-              startIcon={profile?.following ? <RemoveOutlined /> : <AddOutlined />}
-              sx={{ alignSelf: 'end' }}
-            >
-              {profile?.following ? `Unfollow ${profile?.username}` : `Follow ${profile?.username}`}
-            </Button>
+            articles?.map((article) => <ArticlePreview article={article} key={article.slug} />)
           )}
+          <Pagination
+            page={currentPage}
+            count={totalPages}
+            color="primary"
+            sx={{ mt: '1.5rem', alignSelf: 'center' }}
+            onChange={handlePageChange}
+            renderItem={(item) => (
+              <PaginationItem
+                component={Link}
+                to={`/profile/${profile?.username}/?feed=${activeTab}${item.page === 1 ? '' : `&page=${item.page}`}`}
+                {...item}
+              />
+            )}
+          />
         </Container>
       </Box>
-      <Container maxWidth="md" sx={{ mt: '1rem', display: 'flex', flexDirection: 'column' }}>
-        <Tabs
-          value={activeTab}
-          textColor="primary"
-          indicatorColor="primary"
-          onChange={handleTabChange}
-        >
-          <Tab
-            value="author"
-            label="My Articles"
-            component={Link}
-            to={`/profile/${profile?.username}/?feed=author`}
-          />
-          <Tab
-            value="favorited"
-            label="Favorited Articles"
-            component={Link}
-            to={`/profile/${profile?.username}/?feed=favorited`}
-          />
-        </Tabs>
-        {isLoading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', p: '4rem 0' }}>
-            <CircularProgress size={60} />
-          </Box>
-        ) : (
-          articles?.map((article) => <ArticlePreview article={article} key={article.slug} />)
-        )}
-        <Pagination
-          page={currentPage}
-          count={totalPages}
-          color="primary"
-          sx={{ mt: '1.5rem', alignSelf: 'center' }}
-          onChange={handlePageChange}
-          renderItem={(item) => (
-            <PaginationItem
-              component={Link}
-              to={`/profile/${profile?.username}/?feed=${activeTab}${item.page === 1 ? '' : `&page=${item.page}`}`}
-              {...item}
-            />
-          )}
-        />
-      </Container>
-    </Box>
+    </Fade>
   );
 };
 

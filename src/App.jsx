@@ -12,17 +12,13 @@ import darkTheme from './theme/darkTheme.js';
 import lightTheme from './theme/lightTheme.js';
 
 function App() {
-  const { user, isLoading, restoreSession } = useAuthStore();
+  const { user, restoreSession } = useAuthStore();
   const { themeMode } = useThemeStore();
   const currentTheme = themeMode === 'dark' ? darkTheme : lightTheme;
 
   useEffect(() => {
     restoreSession();
   }, [restoreSession]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <ThemeProvider theme={currentTheme}>

@@ -131,7 +131,12 @@ const HomePage = () => {
                 />
               ))
             : articles?.map((article, index) => (
-                <ArticlePreview article={article} handleTagClick={handleTagClick} key={index} />
+                <ArticlePreview
+                  article={article}
+                  handleTagClick={handleTagClick}
+                  key={index}
+                  isLoading={isLoading}
+                />
               ))}
 
           <Pagination
