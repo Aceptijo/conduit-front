@@ -5,6 +5,7 @@ html {
 body {
    font-family: "Roboto Mono", monospace;
    margin: 0;
+   transition: all 0.5s ease;
 }
 
 footer {

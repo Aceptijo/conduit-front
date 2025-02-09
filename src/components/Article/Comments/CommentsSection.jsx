@@ -4,18 +4,12 @@ import useAuthStore from '../../../store/authStore.js';
 import { Link } from 'react-router-dom';
 import { Avatar, Box, Button, TextField, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useForm } from 'react-hook-form';
 
 const CommentsSection = ({ slug }) => {
   const { user } = useAuthStore();
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useForm();
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -70,10 +64,20 @@ const CommentsSection = ({ slug }) => {
               value={newComment}
               onChange={(event) => setNewComment(event.target.value)}
               multiline
-              rows={3}
               label="Write a comment"
               fullWidth
               color="secondary"
+              sx={{
+                '& .MuiInputBase-root': {
+                  resize: 'vertical',
+                  overflow: 'auto',
+                  minHeight: '100px',
+                  boxSizing: 'border-box',
+                },
+                '& textarea': {
+                  height: '100% !important',
+                },
+              }}
             />
             <Box
               sx={{

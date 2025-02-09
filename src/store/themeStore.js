@@ -1,11 +1,15 @@
 import { create } from 'zustand';
 
 const useThemeStore = create((set) => ({
-  themeMode: 'dark',
+  themeMode: localStorage.getItem('globalTheme') || 'dark',
   setThemeMode: () => {
-    set((state) => ({
-      themeMode: state.themeMode === 'dark' ? 'light' : 'dark',
-    }));
+    document.startViewTransition(() => {
+      set((state) => {
+        const newThemeMode = state.themeMode === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('globalTheme', newThemeMode);
+        return { themeMode: newThemeMode };
+      });
+    });
   },
 }));
 

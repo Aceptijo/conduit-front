@@ -33,7 +33,10 @@ const AuthHeader = () => {
           >
             conduit
           </Typography>
-          <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
+          <Box
+            className="theme-transition"
+            sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}
+          >
             <IconButton color="secondary" onClick={() => setThemeMode()}>
               {themeMode === 'dark' ? <LightModeIcon /> : <Brightness3Icon />}
             </IconButton>

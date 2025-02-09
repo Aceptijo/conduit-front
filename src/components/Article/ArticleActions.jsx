@@ -38,7 +38,7 @@ const ArticleActions = ({
             variant={isFollowing ? 'contained' : 'outlined'}
             startIcon={isFollowing ? <RemoveOutlined /> : <AddOutlined />}
             onClick={onFollow}
-            color="secondary"
+            color="primary"
           >
             {isFollowing
               ? `Unfollow ${article?.author.username}`
@@ -49,6 +49,7 @@ const ArticleActions = ({
           variant={isFavorited ? 'contained' : 'outlined'}
           startIcon={isFavorited ? <FavoriteIcon /> : <FavoriteBorder />}
           onClick={onFavorite}
+          color="primary"
         >
           {isFavorited ? 'Unfavorite' : 'Favorite'}
         </Button>
